@@ -3,22 +3,24 @@ class ItemsController < ApplicationController
   # GET /items.json
   def index
     @items = Item.all
-
+    
+    # HTTP cache
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @items }
-    end
+    end if stale? @items.sort_by(&:updated_at).first
   end
 
   # GET /items/1
   # GET /items/1.json
   def show
     @item = Item.find(params[:id])
-
+    
+    # HTTP cache
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @item }
-    end
+    end if stale? @item
   end
 
   # GET /items/new
