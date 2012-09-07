@@ -1,6 +1,6 @@
 require(["jquery", "jquery.pjax"], function($) {
 
-  <% if @item.persisted? %>
+  <% if @item.errors.empty? %>
 		// redirect to the item
 		$.pjax({
 			url: "<%= url_for(@item) %>",
@@ -8,7 +8,11 @@ require(["jquery", "jquery.pjax"], function($) {
 		})
   <% else %>
     // load the form
-  	var form = $("#new_item")
+    <% if @item.persisted? %>
+	  	var form = $("#edit_item_<%= @item.id %>")
+	  <% else %>
+	  	var form = $("#new_item")
+	  <% end %>
   	// remove any current errors
   	form.find(".error_explanation").remove()
   	// add the new errors

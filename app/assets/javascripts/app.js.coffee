@@ -4,4 +4,4 @@ define ["jquery", "jquery.pjax"], ($) ->
 		constructor: (@view) ->
 		
 		boot: ->
-			@view.find("a:not([data-remote]):not([data-behavior]):not([data-skip-pjax])").pjax("[data-pjax-container]")
+			@view.find("a:not([data-remote]):not([data-method]):not([data-behavior]):not([data-skip-pjax])").pjax("[data-pjax-container]")
