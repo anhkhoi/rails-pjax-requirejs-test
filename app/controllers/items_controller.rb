@@ -8,7 +8,7 @@ class ItemsController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @items }
-    end if stale? @items.sort_by(&:updated_at).first
+    end if stale? @items.sort_by(&:updated_at).last
   end
 
   # GET /items/1
