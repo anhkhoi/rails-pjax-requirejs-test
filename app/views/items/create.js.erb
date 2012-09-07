@@ -1,0 +1,18 @@
+require(["jquery", "jquery.pjax"], function($) {
+
+  <% if @item.persisted? %>
+		// redirect to the item
+		$.pjax({
+			url: "<%= url_for(@item) %>",
+			container: "[data-pjax-container='main']"
+		})
+  <% else %>
+    // load the form
+  	var form = $("#new_item")
+  	// remove any current errors
+  	form.find(".error_explanation").remove()
+  	// add the new errors
+  	form.prepend("<%=j render "errors", errors: @item.errors %>")
+  <% end %>
+
+})

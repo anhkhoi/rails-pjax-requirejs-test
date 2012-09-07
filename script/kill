@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+services = %w(rails mongod)
+
+puts "Killing any of the following processes: #{services.join(", ")}"
+
+services.each do |service|
+	system("sudo killall #{service} 2> /dev/null")
+end

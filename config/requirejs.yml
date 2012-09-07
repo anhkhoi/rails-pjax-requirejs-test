@@ -1,0 +1,8 @@
+shim:
+  jquery:
+    exports: '$'
+  jquery-ujs:
+    - jquery
+paths:
+  jquery: jquery.min
+  jquery-ujs: jquery_ujs

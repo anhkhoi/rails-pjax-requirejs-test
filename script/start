@@ -1,0 +1,4 @@
+mkdir -p log
+touch log/development.log
+script/kill
+bundle exec foreman start -f ./Procfile
