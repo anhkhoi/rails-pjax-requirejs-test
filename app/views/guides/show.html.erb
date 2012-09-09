@@ -1,0 +1,14 @@
+<% set_title(@guide.title) %>
+
+<p>
+  <b>Title:</b>
+  <%= @guide.title %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @guide.description %>
+</p>
+
+<%= link_to 'Edit', edit_item_guide_path(@item, @guide) %> |
+<%= link_to 'Back', @item %>

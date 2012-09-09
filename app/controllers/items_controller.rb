@@ -18,7 +18,7 @@ class ItemsController < ApplicationController
     
     # HTTP cache
     respond_to do |format|
-      format.html # show.html.erb
+      format.html { @guides = @item.guides }
       format.json { render json: @item }
     end if stale? @item
   end

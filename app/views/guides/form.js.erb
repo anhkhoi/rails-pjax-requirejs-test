@@ -1,0 +1,22 @@
+require(["jquery", "jquery.pjax"], function($) {
+
+  <% if @guide.errors.empty? %>
+    // redirect to the guide
+    $.pjax({
+      url: "<%= url_for([@item, @guide]) %>",
+      container: "[data-pjax-container='main']"
+    })
+  <% else %>
+    // load the form
+    <% if @guide.persisted? %>
+      var form = $("#edit_guide_<%= @guide.id %>")
+    <% else %>
+      var form = $("#new_guide")
+    <% end %>
+    // remove any current errors
+    form.find(".error_explanation").remove()
+    // add the new errors
+    form.prepend("<%=j render "errors", errors: @guide.errors %>")
+  <% end %>
+
+})
