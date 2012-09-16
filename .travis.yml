@@ -4,3 +4,5 @@ rvm:
 services:
   - mongodb
   - memcache
+before_script:
+  - "export DISPLAY=:99.0"
