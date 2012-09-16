@@ -2,7 +2,7 @@ class ItemsController < ApplicationController
   # GET /items
   # GET /items.json
   def index
-    @items = Item.all
+    @items = load_items(params)
     
     # HTTP cache
     respond_to do |format|
@@ -14,7 +14,7 @@ class ItemsController < ApplicationController
   # GET /items/1
   # GET /items/1.json
   def show
-    @item = Item.find(params[:id])
+    @item = load_item(params)
     
     # HTTP cache
     respond_to do |format|
@@ -36,7 +36,7 @@ class ItemsController < ApplicationController
 
   # GET /items/1/edit
   def edit
-    @item = Item.find(params[:id])
+    @item = load_item(params)
   end
 
   # POST /items
@@ -60,11 +60,11 @@ class ItemsController < ApplicationController
   # PUT /items/1
   # PUT /items/1.json
   def update
-    @item = Item.find(params[:id])
+    @item = load_item(params)
 
     respond_to do |format|
       if @item.update_attributes(params[:item])
-        format.html { redirect_to @item, notice: 'Item was successfully updated.' }
+        format.html { redirect_to @item, notice: "Item was successfully updated." }
         format.json { render json: @item }
         format.js { render :form }
       else
@@ -78,7 +78,7 @@ class ItemsController < ApplicationController
   # DELETE /items/1
   # DELETE /items/1.json
   def destroy
-    @item = Item.find(params[:id])
+    @item = load_item(params)
     @item.destroy
 
     respond_to do |format|
@@ -86,5 +86,14 @@ class ItemsController < ApplicationController
       format.json { head :no_content }
       format.js
     end
+  end
+  
+  protected
+  def load_items(options = {})
+    Item.all
+  end
+  
+  def load_item(options = {})
+    Item.find(params[:id])
   end
 end

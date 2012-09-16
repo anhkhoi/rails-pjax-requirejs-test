@@ -5,7 +5,13 @@ module ApplicationHelper
   
   def title_tag
     content_tag(:title) do
-      content_for?(:title) ? content_for(:title) : "PJAX RequireJS Test"
+      if content_for?(:title)
+        content_for(:title)
+      elsif @title_tag_content
+         @title_tag_content
+      else
+        t("app.default_title", default: t("app.name"))
+      end
     end
   end
 end

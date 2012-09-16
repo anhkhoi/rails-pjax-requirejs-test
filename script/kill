@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-services = %w(rails mongod)
+services = %w(rails mongod memcached)
 
 puts "Killing any of the following processes: #{services.join(", ")}"
 

@@ -2,11 +2,14 @@ source "https://rubygems.org"
 
 gem "rails", "3.2.8"
 
-# database
+# Database
 gem "mongoid", "~> 3.0.5"
 gem "bson_ext", "~> 1.7.0"
 
-# init
+# Caching
+gem "dalli"
+
+# App boot scripts
 gem "foreman"
 
 group :assets do
@@ -15,30 +18,53 @@ group :assets do
   gem "uglifier", ">= 1.0.3"
 end
 
-# javascript
+# Javascript frameworks
 gem "jquery-rails"
 gem "requirejs-rails", "~> 0.9.0"
 gem "pjax_rails", "~> 0.3.3"
 
 # testing
 group :development, :test do
+  # Unit tests
   gem "rspec-rails"
+  gem "guard-rspec"
+  
+  # Acceptance tests
   gem "cucumber-rails", require: false
-  gem "autotest-rails"
-  gem "autotest-fsevent"
-  gem "autotest-growl"
+  gem "guard-cucumber"
+  
+  # JavaScript specs
+  gem "jasminerice"
+  gem "guard-jasmine"
+  
+  # improve Guard performance
+  if RUBY_PLATFORM =~ /darwin/i
+    gem "rb-fsevent", require: false
+  end
 end
+
+# useful testing utilities
 group :test do
-  gem "spork"
-  gem "shoulda"
-  gem "factory_girl_rails"
+  # Helpers for Mongoid projects
   gem "mongoid-rspec"
-  gem "vcr"
-  gem "webmock"
-  gem "database_cleaner"
+  
+  # Better syntax for testing emails
+  gem "email_spec"
+  
+  # Fixture replacement
+  gem "factory_girl_rails"
+  
+  # Acceptance test framework
   gem "capybara", "1.1.2"
   gem "capybara-webkit", "0.12.1"
-  gem "selenium-webdriver", "2.24.0"
-  gem "email_spec"
+  
+  # Handle external HTTP requests
+  gem "vcr"
+  gem "webmock"
+  
+  # Resets DB between spec runs
+  gem "database_cleaner"
+  
+  # Test coverage
   gem "simplecov", require: false
 end
