@@ -1,10 +1,4 @@
-#= require app
-
-alert("test")
-
 require ["app"], (App) ->
-
-  alert("required")
 
   describe "App", ->
     it "should have a method called 'boot'", ->
