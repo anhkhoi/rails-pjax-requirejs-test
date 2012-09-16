@@ -229,6 +229,7 @@ DEPENDENCIES
   mongoid-rspec
   pjax_rails (~> 0.3.3)
   rails (= 3.2.8)
+  rake
   rb-fsevent
   requirejs-rails (~> 0.9.0)
   rspec-rails

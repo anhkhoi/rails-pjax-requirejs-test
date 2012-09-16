@@ -67,4 +67,7 @@ group :test do
   
   # Test coverage
   gem "simplecov", require: false
+  
+  # Used by Travis
+  gem "rake"
 end
