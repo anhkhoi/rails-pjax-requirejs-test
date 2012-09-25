@@ -3,14 +3,14 @@ Given /^an item exists called "(.*?)"$/ do |title|
 end
 
 When /^I view the item index$/ do
-  visit items_path
+  item.index
 end
 
 When /^I click on the item "(.*?)"$/ do |title|
-  item = Item.where(title: title).first
-  find("a[href='#{item_path(item)}']").click
+  item.open_by_title(title)
 end
 
-Then /^I should see the heading "(.*?)"$/ do |heading|
-  page.should have_css("h1, h2, h3, h4, h5, h6", text: heading)
+Then /^I should see the item "(.*?)"$/ do |title|
+  record = Item.where(title: title).first
+  current_url.should == item.url(record)
 end
