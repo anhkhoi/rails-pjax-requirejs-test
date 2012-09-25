@@ -16,7 +16,7 @@ module PageObjects
     end
     
     def open_by_title(title)
-      record = Item.where(title: title).first
+      record = ::Item.where(title: title).first
       open(record)
     end
 
