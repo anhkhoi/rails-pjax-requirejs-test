@@ -9,8 +9,8 @@
 
   <div class="header"><%= Time.now %></div>
 
-  <div data-pjax-container="main">
+  <%= pjax_container "main" do %>
     <%= yield %>
-  </div>
+  <% end %>
 </body>
 </html>

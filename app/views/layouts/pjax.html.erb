@@ -1,2 +1,5 @@
 <%= title_tag %>
-<%= yield %>
+
+<%= pjax_container "main" do %>
+  <%= yield %>
+<% end %>
