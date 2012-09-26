@@ -1,5 +1,5 @@
 module PjaxHelper
   def pjax_container(name, &block)
-    content_tag(:div, block, "data-pjax-container" => name)
+    content_tag(:div, "data-pjax-container" => name, &block)
   end
 end
