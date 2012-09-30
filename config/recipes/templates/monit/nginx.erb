@@ -1,0 +1,5 @@
+check process <%= process_name %> with pidfile <%= pid_file %>
+  start program = "<%= start_command %>" 
+  stop program = "<%= stop_command %>"
+  if children > <%= max_children %> then restart
+  if <%= max_restarts %> restarts within <%= max_cycles %> cycles then timeout
