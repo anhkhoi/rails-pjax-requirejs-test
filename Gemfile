@@ -26,6 +26,13 @@ gem "pjax_rails", "~> 0.3.3"
 # Silence the asset pipeline
 gem "quiet_assets", group: :development
 
+# Deployment
+group :development do
+  gem "capistrano"
+  gem "capistrano-monit"
+  gem "vagrant"
+end
+
 # testing
 group :development, :test do
   # Unit tests
