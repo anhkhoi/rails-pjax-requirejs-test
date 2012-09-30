@@ -1,3 +1,5 @@
+require "capistrano/monit"
+
 set :application, "pjax_requirejs_test"
 
 # Source control
@@ -19,6 +21,11 @@ role :db,  "127.0.0.1"
 namespace :deploy do
   desc "Ensure the connection to Vagrant is working..."
   task :verify_vagrant do
-    puts capture("whoami")
+    user = capture("whoami").chomp
+    if ssh_options[:user] == user
+      puts "Verified successful connection."
+    else
+      puts "Connection failed - returned user was '#{user}' not '#{ssh_options[:user]}'."
+    end
   end
 end
