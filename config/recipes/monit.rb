@@ -27,10 +27,13 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     
     desc "Configures Monit for HTTP access"
     task :configure_http_access do
+      # adjust the config file where necessary
       run %Q(
         #{sudo} sed -i -e 's/# set httpd port/set httpd port/' #{monit_config_file};
         #{sudo} sed -i -e 's/#    allow localhost/allow localhost/' #{monit_config_file}
       )
+      # ensure the changes were valid
+      validate_syntax
     end
     
     desc "Tell monit to start"
