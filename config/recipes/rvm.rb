@@ -2,10 +2,20 @@ Capistrano::Configuration.instance(:must_exist).load do
   # Install RVM on any server in the config
   before "deploy:setup", "rvm:disable"
   after "deploy:setup", "rvm:install_rvm"
-  before "after:setup", "rvm:enable"
+  after "rvm:install_rvm", "rvm:install_ruby"
+  after "rvm:install_rvm", "rvm:enable"
+  after "after:setup", "rvm:enable"
   
   # Install RVM's requirements before installing it
   before "rvm:install_rvm", "rvm:install_prerequisites"
+
+  def rvm_installed
+    @rvm_installed ||= begin
+      capture("which rvm") =~ /bin\/rvm/
+    rescue
+      false
+    end
+  end
 
   namespace :rvm do
     desc "Installs RVM requirements"
@@ -16,13 +26,17 @@ Capistrano::Configuration.instance(:must_exist).load do
     
     desc "Disables RVM usage in Capistrano tasks"
     task :disable do
-      @rvm_shell = default_run_options[:shell]
-      default_run_options[:shell] = "/bin/bash --login"
+      unless rvm_installed
+        @rvm_shell ||= default_run_options[:shell]
+        default_run_options[:shell] = "/bin/bash --login"
+      end
     end
   
     desc "Re-enables RVM usage in Capistrano tasks"
     task :enable do
-      set :shell, @rvm_shell
+      if @rvm_shell
+        set :shell, @rvm_shell
+      end
     end
   end
 end

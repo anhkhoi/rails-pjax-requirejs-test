@@ -14,6 +14,11 @@ role :web, "127.0.0.1"
 role :app, "127.0.0.1"
 role :db,  "127.0.0.1"
 
+# Set services for each role
+set :services, {
+  nginx: [:web]
+}
+
 namespace :vagrant do
   desc "Ensure the connection to Vagrant is working"
   task :verify_connection do
