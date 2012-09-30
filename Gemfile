@@ -29,8 +29,7 @@ gem "quiet_assets", group: :development
 # Deployment
 group :development do
   gem "capistrano"
-  gem "capistrano-monit"
-  gem "vagrant"
+  gem "rvm-capistrano"
 end
 
 # testing

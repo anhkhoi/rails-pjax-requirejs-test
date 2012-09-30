@@ -1,31 +1,18 @@
-require "capistrano/monit"
-
+# Application options
 set :application, "pjax_requirejs_test"
 
 # Source control
 set :scm, :git
-set :deploy_via, :copy
 
-# SSH details
-ssh_options.merge!({
-  user: "vagrant",
-  port: 2222,
-  keys: `vagrant ssh-config | grep IdentityFile | awk '{print $2}'`.chomp
-})
+# Multistage options
+set :stages, %w(development)
+set :default_stage, "development"
 
-# Servers
-role :web, "127.0.0.1"
-role :app, "127.0.0.1"
-role :db,  "127.0.0.1"
+# RVM config
+set :rvm_ruby_string, :local
 
-namespace :deploy do
-  desc "Ensure the connection to Vagrant is working..."
-  task :verify_vagrant do
-    user = capture("whoami").chomp
-    if ssh_options[:user] == user
-      puts "Verified successful connection."
-    else
-      puts "Connection failed - returned user was '#{user}' not '#{ssh_options[:user]}'."
-    end
-  end
-end
+require "capistrano/ext/multistage"
+require "bundler/capistrano"
+require "rvm/capistrano"
+
+Dir[File.join(File.dirname(__FILE__), "recipes", "*.rb")].each { |f| require f }
