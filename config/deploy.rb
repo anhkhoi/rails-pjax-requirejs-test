@@ -8,7 +8,7 @@ set :deploy_via, :copy
 ssh_options.merge!({
   user: "vagrant",
   port: 2222,
-  keys: [File.join(ENV["HOME"], ".vagrant.d", "insecure_private_key")]
+  keys: `vagrant ssh-config | grep IdentityFile | awk '{print $2}'`.chomp
 })
 
 # Servers
