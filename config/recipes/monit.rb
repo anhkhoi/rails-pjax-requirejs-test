@@ -13,6 +13,9 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
 
   # Where to store the monit configuration templates (locally)
   set :monit_template_dir, File.join(File.dirname(__FILE__), "templates/monit")
+  
+  # How often (seconds) to check the processes
+  set :monit_check_interval, 30
 
   namespace :monit do
     desc "Installs Monit on the server"
@@ -32,6 +35,14 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
         #{sudo} sed -i -e 's/# set httpd port/set httpd port/' #{monit_config_file};
         #{sudo} sed -i -e 's/#    allow localhost/allow localhost/' #{monit_config_file}
       )
+      # ensure the changes were valid
+      validate_syntax
+    end
+    
+    desc "Configures Monit"
+    task :configure do
+      # adjust the config file where necessary
+      sudo "sed -i -e 's/  set daemon \\\([0-9]\\\{1,\\\}\\\)/  set daemon #{monit_check_interval}/' #{monit_config_file}"
       # ensure the changes were valid
       validate_syntax
     end
