@@ -1,5 +1,3 @@
-require "erb"
-require "ostruct"
 require_relative "lib/erb_hash_binding"
 
 Capistrano::Configuration.instance(:must_exist).load do |config|

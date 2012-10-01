@@ -3,8 +3,6 @@ require_relative "lib/erb_hash_binding"
 Capistrano::Configuration.instance(:must_exist).load do |config|
   # install on deploy
   after "deploy:setup", "logrotate:install"
-  # configure a Rails app logrotate script
-  after "logrotate:install", "logrotate:configure_rails"
   
   # Where to store the logrotate configuration files (remotely)
   set :logrotate_config_dir, "/etc/logrotate.d"
@@ -19,15 +17,6 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     
     task :validate_syntax do
       sudo "logrotate -f #{logrotate_config_dir}/*"
-    end
-    
-    task :configure_rails do
-      # upload the config file
-      upload_logrotate_config("rails_app", {
-        path: File.join(shared_path, "log/*.log")
-      })
-      # ensure the syntax is valid
-      logrotate.validate_syntax
     end
   end
   
