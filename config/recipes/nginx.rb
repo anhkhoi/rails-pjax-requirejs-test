@@ -5,6 +5,9 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   # Configure the monit.d config file after install
   after "nginx:install", "nginx:configure_monit"
   
+  # Configure the logrotate.d config file after install
+  after "nginx:install", "nginx:configure_logrotate"
+  
   # loads the user's setting for which roles NGINX is to be installed on
   # or falls back to the default if they haven't set it
   def nginx_roles
@@ -42,6 +45,17 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
       })
       # ensure the syntax is valid
       monit.validate_syntax
+    end
+    
+    desc "Configures logrotate to watch NGINX"
+    task :configure_logrotate, roles: nginx_roles do
+      # upload the config file
+      upload_logrotate_config("nginx_access", {
+        path: "/var/log/nginx/*.log",
+        post_rotate: "monit service nginx reload"
+      })
+      # ensure the syntax is valid
+      logrotate.validate_syntax
     end
     
     desc "Starts NGINX"

@@ -1,0 +1,53 @@
+require_relative "lib/erb_hash_binding"
+
+Capistrano::Configuration.instance(:must_exist).load do |config|
+  # install on deploy
+  after "deploy:setup", "logrotate:install"
+  # configure a Rails app logrotate script
+  after "logrotate:install", "logrotate:configure_rails"
+  
+  # Where to store the logrotate configuration files (remotely)
+  set :logrotate_config_dir, "/etc/logrotate.d"
+  
+  # Where to store the logrotate configuration templates (locally)
+  set :logrotate_template_dir, File.join(File.dirname(__FILE__), "templates/logrotate")
+  
+  namespace :logrotate do
+    task :install do
+      sudo "apt-get install -y logrotate"
+    end
+    
+    task :validate_syntax do
+      sudo "logrotate -f #{logrotate_config_dir}/*"
+    end
+    
+    task :configure_rails do
+      # upload the config file
+      upload_logrotate_config("rails_app", {
+        path: File.join(shared_path, "log/*.log")
+      })
+      # ensure the syntax is valid
+      logrotate.validate_syntax
+    end
+  end
+  
+  def upload_logrotate_config(name, options)
+    # load our template name
+    template_name = options.delete(:template) || "default.erb"
+    # load the template contents
+    template_path = File.join(logrotate_template_dir, template_name)
+    template_data = File.read(template_path)
+    # define the destination
+    destination = options.delete(:destination) || File.join(logrotate_config_dir, "#{name}.conf")
+    # define the temporary upload location
+    tempfile_path = "/tmp/logrotate_#{File.basename(destination)}"
+    # render the template with the options
+    data = ErbHashBinding.new(options).render(template_data)
+    # upload the config to the server
+    put(data, tempfile_path, mode: 0600)
+    # delete any existing file
+    sudo "rm -f #{destination}"
+    # move it to the right place
+    sudo "mv #{tempfile_path} #{destination}"
+  end
+end

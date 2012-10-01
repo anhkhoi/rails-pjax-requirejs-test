@@ -1,0 +1,12 @@
+<%= path %> {
+  daily
+  missingok
+  rotate <%= defined?(count) ? count : 10 %>
+  compress
+  size 10M
+  delaycompress
+  sharedscripts
+  <% if defined?(post_rotate) %>postrotate
+    <%= post_rotate %>
+  <% end %>endscript
+}

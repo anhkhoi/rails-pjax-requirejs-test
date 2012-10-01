@@ -1,5 +1,6 @@
 require "erb"
 require "ostruct"
+require_relative "lib/erb_hash_binding"
 
 Capistrano::Configuration.instance(:must_exist).load do |config|
   # Install Monit on the server during setup
@@ -92,7 +93,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     # define the destination
     destination = options.delete(:destination) || File.join(monit_config_dir, "#{name}.conf")
     # define the temporary upload location
-    tempfile_path = "/tmp/#{File.basename(destination)}"
+    tempfile_path = "/tmp/monit_#{File.basename(destination)}"
     # render the template with the options
     data = ErbHashBinding.new(options).render(template_data)
     # upload the config to the server
@@ -101,11 +102,5 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     sudo "rm -f #{destination}"
     # move it to the right place
     sudo "mv #{tempfile_path} #{destination}"
-  end
-  
-  class ErbHashBinding < OpenStruct
-    def render(template)
-      ERB.new(template).result(binding)
-    end
   end
 end
