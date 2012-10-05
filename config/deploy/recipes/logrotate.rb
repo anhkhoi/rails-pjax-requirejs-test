@@ -2,7 +2,7 @@ require_relative "lib/erb_hash_binding"
 
 Capistrano::Configuration.instance(:must_exist).load do |config|
   # install on deploy
-  after "deploy:setup", "logrotate:install"
+  after "deploy:bootstrap", "logrotate:install"
   
   # Where to store the logrotate configuration files (remotely)
   set :logrotate_config_dir, "/etc/logrotate.d"

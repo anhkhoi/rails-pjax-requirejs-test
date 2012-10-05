@@ -2,7 +2,7 @@ require_relative "logrotate"
 
 Capistrano::Configuration.instance(:must_exist).load do |config|
   # configure a Rails app logrotate script
-  after "deploy:setup", "rails:configure_logrotate"
+  after "deploy:bootstrap", "rails:configure_logrotate"
 
   namespace :rails do
     task :configure_logrotate do

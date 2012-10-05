@@ -2,7 +2,7 @@ require_relative "monit"
 
 Capistrano::Configuration.instance(:must_exist).load do |config|
   # Install NGINX when setting up the server
-  after "deploy:setup", "nginx:install"
+  after "deploy:bootstrap", "nginx:install"
   
   # Configure the monit.d config file after install
   after "nginx:install", "nginx:configure_monit"

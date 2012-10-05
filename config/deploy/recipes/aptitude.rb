@@ -1,6 +1,6 @@
 Capistrano::Configuration.instance(:must_exist).load do
   # Update aptitude
-  after "deploy:setup", "aptitude:update"
+  before "deploy:bootstrap", "aptitude:update"
 
   namespace :aptitude do
     desc "Updates aptitude"

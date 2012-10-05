@@ -3,7 +3,7 @@ require_relative "lib/erb_hash_binding"
 
 Capistrano::Configuration.instance(:must_exist).load do |config|
   # Install Monit on the server during setup
-  after "deploy:setup", "monit:install"
+  after "deploy:bootstrap", "monit:install"
   
   # Path to the monitrc file
   set :monit_config_file, "/etc/monit/monitrc"

@@ -1,10 +1,10 @@
 Capistrano::Configuration.instance(:must_exist).load do
   # Install RVM on any server in the config
   before "deploy:setup", "rvm:disable"
-  after "deploy:setup", "rvm:install_rvm"
+  before "deploy:setup", "rvm:install_rvm"
   after "rvm:install_rvm", "rvm:install_ruby"
   after "rvm:install_rvm", "rvm:enable"
-  after "after:setup", "rvm:enable"
+  after "deploy:setup", "rvm:enable"
   
   # Install RVM's requirements before installing it
   before "rvm:install_rvm", "rvm:install_prerequisites"
