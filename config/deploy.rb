@@ -18,4 +18,4 @@ require "rvm/capistrano"
 # used to define which services are on which servers
 set :services, {}
 
-Dir[File.join(File.dirname(__FILE__), "recipes", "*.rb")].each { |f| require f }
+Dir[File.join(File.dirname(__FILE__), "deploy", "recipes", "*.rb")].each { |f| require f }
