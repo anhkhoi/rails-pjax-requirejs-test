@@ -16,8 +16,17 @@ role :db,  "127.0.0.1"
 
 # Set services for each role
 set :services, {
-  nginx: [:web]
+  rvm: [ :app ],
+  nginx: [ :web ],
+  iptables: [ :web, :app, :db ]
 }
+
+# Set open ports
+set :open_ports, [
+  { service: :ssh, access: :wan, roles: [ :web, :app, :db ] },
+  { number: 80, access: :wan, roles: [ :web ] },
+  { number: 443, access: :wan, roles: [ :web ] }
+]
 
 namespace :vagrant do
   desc "Ensure the connection to Vagrant is working"
