@@ -1,5 +1,5 @@
-require ["jquery", "jquery-ujs", "app"], ($, ujs, App) ->
-
-	$ ->
-		window.app = new App($(document.body))
-		window.app.boot()
+#= require jquery
+#= require jquery_ujs
+#= require jquery.pjax
+#= require controllers/base_controller
+#= require app

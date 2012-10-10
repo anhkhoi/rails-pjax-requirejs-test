@@ -1,4 +1,4 @@
-define ["jquery", "jquery.pjax"], ($) ->
+( ($) ->
 
 	class App
 		@controllers = [<%=
@@ -8,20 +8,20 @@ define ["jquery", "jquery.pjax"], ($) ->
 		%>]
 
 		constructor: (@view) ->
-		
+
 		boot: ->
 			@init_pjax()
 			@watch_navigation()
-		
+
 		init_pjax: ->
 			@view.find("a:not([data-remote]):not([data-method]):not([data-behavior]):not([data-skip-pjax])").pjax("[data-pjax-container]")
-		
+
 		watch_navigation: ->
-			$(document).on("pjax:end", =>
+			@view.on("pjax:end", =>
 				$("[data-controller]").each (i,el) =>
 					@page_specifics($(el))
 			).trigger("pjax:end")
-			
+
 		page_specifics: (view) ->
 			# unless the view is already initialized
 			unless view.data("controller-init")
@@ -35,3 +35,9 @@ define ["jquery", "jquery.pjax"], ($) ->
 					require [key], (Controller) =>
 						# initialize the controller with the view
 						new Controller(view)
+
+	$ ->
+		window.app = new App($(document.body))
+		window.app.boot()
+
+)(jQuery)
