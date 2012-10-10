@@ -1,0 +1,30 @@
+define "app", ->
+
+	class App
+		@controllers = [<%=
+				dir = File.join(File.dirname(__FILE__), "controllers", "**", "*.coffee")
+				paths = Dir[dir].map { |d| %Q("#{d.gsub(/^.*controllers\/([^\.]*).*?$/, 'controllers/\1')}") }
+				paths.join(", ")
+		%>]
+
+		constructor: (@view) ->
+
+		boot: ->
+			@view.on("page:change", =>
+				$("[data-controller]").each (i,el) =>
+					@page_specifics($(el))
+			).trigger("page:change")
+
+		page_specifics: (view) ->
+			# unless the view is already initialized
+			unless view.data("controller-init")
+				# mark as initialized
+				view.data("controller-init", true)
+				# calculate our controller key
+				key = "controllers/#{view.data("controller")}_controller"
+				# if we have a file for this controller
+				if App.controllers.indexOf(key) >= 0
+					# load the controller specific module
+					require [key], (Controller) =>
+						# initialize the controller with the view
+						new Controller(view)

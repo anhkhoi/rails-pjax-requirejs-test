@@ -5,12 +5,11 @@
   <%= requirejs_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
-<body>
+<body data-controller="<%= controller_name %>" data-action="<%= action_name %>">
 
   <div class="header"><%= Time.now %></div>
 
-  <%= pjax_container "main" do %>
-    <%= yield %>
-  <% end %>
+  <%= yield %>
+
 </body>
 </html>
