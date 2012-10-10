@@ -1,10 +1,12 @@
+#= require turbolinks
+#= require require_config
+#= require require
 #= require jquery
 #= require jquery_ujs
-#= require turbolinks
 #= require controllers/base_controller
 #= require app
 
 require ["jquery", "app"], ($, App) ->
-	$ ->
-		window.app = new App($(document.body))
-		window.app.boot()
+  $ ->
+    window.app = new App($(document))
+    window.app.boot()
