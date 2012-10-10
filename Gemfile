@@ -31,6 +31,7 @@ group :development do
   gem "capistrano"
   gem "rvm-capistrano"
 end
+gem "turbo-sprockets-rails3" # improves asset pipeline speed
 
 # testing
 group :development, :test do
