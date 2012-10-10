@@ -1,5 +1,5 @@
 <%= title_tag %>
 
-<%= pjax_container "main" do %>
+<%= pjax_container "main", data: { controller: controller_name, action: action_name } do %>
   <%= yield %>
 <% end %>

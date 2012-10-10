@@ -9,7 +9,7 @@
 
   <div class="header"><%= Time.now %></div>
 
-  <%= pjax_container "main" do %>
+  <%= pjax_container "main", data: { controller: controller_name, action: action_name } do %>
     <%= yield %>
   <% end %>
 </body>

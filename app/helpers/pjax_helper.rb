@@ -1,6 +1,6 @@
 module PjaxHelper
-  def pjax_container(name, &block)
-    content_tag(:div, "data-pjax-container" => name, &block)
+  def pjax_container(name, html_options = {}, &block)
+    content_tag(:div, html_options.merge("data-pjax-container" => name), &block)
   end
   
   def conditional_pjax_container(name, &block)
