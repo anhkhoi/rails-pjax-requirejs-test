@@ -1,4 +1,4 @@
-define ->
+define "controllers/base_controller", ->
   
   class BaseController
     constructor: (@view) ->

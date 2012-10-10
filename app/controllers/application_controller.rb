@@ -5,8 +5,4 @@ class ApplicationController < ActionController::Base
   def set_title(title)
     @title_tag_content = title
   end
-  
-  def pjax_layout
-    "pjax"
-  end
 end

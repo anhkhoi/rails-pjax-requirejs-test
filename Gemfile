@@ -21,7 +21,7 @@ end
 # Javascript frameworks
 gem "jquery-rails"
 gem "requirejs-rails", "~> 0.9.0"
-gem "pjax_rails", "~> 0.3.3"
+gem "turbolinks"
 
 # Silence the asset pipeline
 gem "quiet_assets", group: :development

@@ -1,4 +1,4 @@
-( ($) ->
+define "app", ->
 
 	class App
 		@controllers = [<%=
@@ -10,17 +10,10 @@
 		constructor: (@view) ->
 
 		boot: ->
-			@init_pjax()
-			@watch_navigation()
-
-		init_pjax: ->
-			@view.find("a:not([data-remote]):not([data-method]):not([data-behavior]):not([data-skip-pjax])").pjax("[data-pjax-container]")
-
-		watch_navigation: ->
-			@view.on("pjax:end", =>
+			@view.on("page:change", =>
 				$("[data-controller]").each (i,el) =>
 					@page_specifics($(el))
-			).trigger("pjax:end")
+			).trigger("page:change")
 
 		page_specifics: (view) ->
 			# unless the view is already initialized
@@ -35,9 +28,3 @@
 					require [key], (Controller) =>
 						# initialize the controller with the view
 						new Controller(view)
-
-	$ ->
-		window.app = new App($(document.body))
-		window.app.boot()
-
-)(jQuery)
