@@ -8,13 +8,14 @@
 # Allow traffic already established to continue
 -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-<% if open_ports.select { |p| service: :ssh }.size > 0 %>
+<% if open_ports.select { |p| p[:service] && (p[:service].to_sym == :ssh) }.size > 0 %>
 # Allow ssh
 -A INPUT -p tcp --dport ssh -j ACCEPT
 <% end %>
 
 # Custom open ports
-<% for port in open_ports.select { |p| p[:number] } %>-A INPUT <% if port[:access] == :lan %>-s 192.168.194.0/24 <% end %>-p tcp --dport <%= port[:number] %> -j ACCEPT
+<% for port in open_ports.select { |p| p[:number] } %>
+-A INPUT <% if port[:access] && (port[:access].to_sym == :lan) %>-s 192.168.194.0/24 <% end %>-p tcp --dport <%= port[:number].to_i %> -j ACCEPT
 <% end %>
 
 # Allow local loopback services

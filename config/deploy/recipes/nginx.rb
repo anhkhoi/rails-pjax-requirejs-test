@@ -12,7 +12,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   
   # loads the user's setting for which roles NGINX is to be installed on
   def nginx_roles
-    services[:nginx] || []
+    [:web]
   end
   
   # returns the location of the NGINX pid file
@@ -24,6 +24,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     desc "Installs NGINX"
     task :install, roles: nginx_roles do
       sudo "apt-get install -y -qq nginx"
+      puts " ** installed NGINX.".green
     end
     
     desc "Configures monit to watch NGINX"
@@ -46,18 +47,31 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     desc "Configures logrotate to watch NGINX"
     task :configure_logrotate, roles: nginx_roles do
       # upload the config file
-      upload_logrotate_config("nginx_access", {
+      upload_logrotate_config("nginx", {
         path: "/var/log/nginx/*.log",
-        post_rotate: "monit service nginx reload"
+        post_rotate: "monit reload nginx",
+        create: "0640 www-data adm"
       })
       # ensure the syntax is valid
       logrotate.validate_syntax
     end
     
-    desc "Starts NGINX"
+    desc "Start NGINX"
     task :start, roles: nginx_roles do
       config[:process] = "nginx"
       monit.start_service
+    end
+    
+    desc "Stop NGINX"
+    task :stop, roles: nginx_roles do
+      config[:process] = "nginx"
+      monit.stop_service
+    end
+    
+    desc "Restart NGINX"
+    task :restart, roles: nginx_roles do
+      config[:process] = "nginx"
+      monit.restart_service
     end
   end
 end

@@ -22,8 +22,11 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     task :install do
       # install the service
       sudo "apt-get install -y -qq monit"
+      puts " ** installed monit.".green
       # configure for HTTP access
       configure_http_access
+      # configure other options
+      configure
       # start the service
       start
     end
@@ -37,6 +40,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
       )
       # ensure the changes were valid
       validate_syntax
+      puts " ** monit configured for HTTP access for `monit status`.".green
     end
     
     desc "Configures Monit"
@@ -45,21 +49,24 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
       sudo "sed -i -e 's/  set daemon \\\([0-9]\\\{1,\\\}\\\)/  set daemon #{monit_check_interval}/' #{monit_config_file}"
       # ensure the changes were valid
       validate_syntax
+      puts " ** monit configured.".green
     end
     
     desc "Tell monit to start"
     task :start do
       sudo "/etc/init.d/monit start"
+      puts " ** monit started.".green
     end
     
     desc "Tell monit to stop"
     task :stop do
       sudo "/etc/init.d/monit stop"
+      puts " ** monit stopped.".green
     end
     
     desc "Tell monit to re-read it's configuration files"
     task :reload do
-      sudo "monit reload"    
+      sudo "monit reload"
     end
     
     desc "Validates Monit configuration syntax"
@@ -67,19 +74,28 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
       sudo "monit -t"
     end
     
-    desc "Tell monit to start a service (e.g. `cap monit:start_service process=nginx`)"
+    desc "Tell monit to start a service"
     task :start_service do
       sudo "monit start #{config[:process] || ENV["process"] || "all"}"
+      puts " ** #{config[:process] || ENV["process"] || "all services"} started.".green
     end
     
-    desc "Tell monit to stop a service (e.g. `cap monit:stop_service process=nginx`)"
+    desc "Tell monit to stop a service"
     task :stop_service do
       sudo "monit stop #{config[:process] || ENV["process"] || "all"}"
+      puts " ** #{config[:process] || ENV["process"] || "all services"} stopped.".green
     end
     
-    desc "Tell monit to restart a service (e.g. `cap monit:restart_service process=nginx`)"
+    desc "Tell monit to restart a service"
     task :restart_service do
       sudo "monit restart #{config[:process] || ENV["process"] || "all"}"
+      puts " ** #{config[:process] || ENV["process"] || "all services"} restarted.".green
+    end
+    
+    desc "Tell monit to reload a service"
+    task :reload_service do
+      sudo "monit reload #{config[:process] || ENV["process"] || "all"}"
+      puts " ** #{config[:process] || ENV["process"] || "all services"} reloaded.".green
     end
   end
   

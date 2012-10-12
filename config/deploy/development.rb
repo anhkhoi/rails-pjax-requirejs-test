@@ -1,4 +1,5 @@
 set :deploy_via, :copy
+set :repository, "."
 
 # SSH details
 key_file = `vagrant ssh-config | grep IdentityFile | awk '{print $2}'`.chomp
@@ -13,13 +14,7 @@ ssh_options.merge!({
 role :web, "127.0.0.1"
 role :app, "127.0.0.1"
 role :db,  "127.0.0.1"
-
-# Set services for each role
-set :services, {
-  rvm: [ :app ],
-  nginx: [ :web ],
-  iptables: [ :web, :app, :db ]
-}
+role :bg,  "127.0.0.1"
 
 # Set open ports
 set :open_ports, [
@@ -33,9 +28,9 @@ namespace :vagrant do
   task :verify_connection do
     begin
       capture "whoami"
-      puts " ** verified successful connection to Vagrant."
+      puts " ** verified successful connection to Vagrant.".green
     rescue => e
-      abort "Connection to Vagrant failed - #{e.message}"
+      abort "Connection to Vagrant failed - #{e.message}".red
     end
   end
 end

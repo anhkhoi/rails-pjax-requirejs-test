@@ -6,7 +6,7 @@
   size 10M
   delaycompress
   sharedscripts
-  <% if defined?(post_rotate) %>postrotate
-    <%= post_rotate %>
-  <% end %>endscript
+  <%= "create #{create}" if defined?(create) %>
+  <%= "prerotate\n    #{pre_rotate}\n  endscript" if defined?(pre_rotate) %>
+  <%= "postrotate\n    #{post_rotate}\n  endscript" if defined?(post_rotate) %>
 }

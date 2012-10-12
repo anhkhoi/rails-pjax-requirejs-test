@@ -13,6 +13,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   namespace :logrotate do
     task :install do
       sudo "apt-get install -y logrotate"
+      puts " ** installed logrotate.".green
     end
     
     task :validate_syntax do
@@ -27,7 +28,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     template_path = File.join(logrotate_template_dir, template_name)
     template_data = File.read(template_path)
     # define the destination
-    destination = options.delete(:destination) || File.join(logrotate_config_dir, "#{name}.conf")
+    destination = options.delete(:destination) || File.join(logrotate_config_dir, name)
     # define the temporary upload location
     tempfile_path = "/tmp/logrotate_#{File.basename(destination)}"
     # render the template with the options

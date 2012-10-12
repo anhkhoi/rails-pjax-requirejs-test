@@ -11,12 +11,11 @@ set :default_stage, "development"
 # RVM config
 set :rvm_ruby_string, ENV['GEM_HOME'].gsub(/.*\//,"")
 
+require "colored"
 require "capistrano/ext/multistage"
 require "bundler/capistrano"
 require "rvm/capistrano"
-
-# used to define which services are on which servers
-set :services, {}
+require File.join(File.dirname(__FILE__), "deploy/recipes/lib/ext.rb")
 
 namespace :deploy do
   desc "Bootstraps a server with services"

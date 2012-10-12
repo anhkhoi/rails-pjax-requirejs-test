@@ -6,6 +6,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     desc "Updates aptitude"
     task :update do
       sudo "apt-get -y -qq update"
+      puts " ** updated aptitude.".green
     end
   end
 end

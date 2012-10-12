@@ -30,6 +30,7 @@ gem "quiet_assets", group: :development
 group :development do
   gem "capistrano"
   gem "rvm-capistrano"
+  gem "colored"
 end
 gem "turbo-sprockets-rails3" # improves asset pipeline speed
 

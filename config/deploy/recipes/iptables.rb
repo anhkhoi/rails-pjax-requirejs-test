@@ -12,18 +12,21 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   
   # loads the user's setting for which roles IPTables is to be installed on
   def iptables_roles
-    services[:iptables] || []
+    [:web, :app, :db]
   end
 
   namespace :iptables do
     task :install, roles: iptables_roles do
       sudo "apt-get install -y iptables"
+      puts " ** installed IPTables firewall.".green
+      configure
     end
     
-    task :configure, roles: iptables_roles do
+    per_server_task :configure, roles: iptables_roles do |server, roles|
+      puts " ** configuring IPTables for #{server} with roles: #{roles.join(", ")}".yellow
       upload_iptables_config({
         open_ports: open_ports.select do |p|
-          (p.roles & roles).size > 0
+          (p[:roles] & Array(roles)).size > 0
         end
       })
     end

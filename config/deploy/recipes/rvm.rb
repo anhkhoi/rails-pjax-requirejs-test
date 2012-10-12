@@ -11,7 +11,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
   # loads the user's setting for which roles RVM is to be installed on
   def rvm_roles
-    services[:rvm] || []
+    [:app, :bg]
   end
 
   def rvm_installed
