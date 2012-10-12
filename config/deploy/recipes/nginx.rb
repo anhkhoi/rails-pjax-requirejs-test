@@ -1,4 +1,5 @@
 require_relative "monit"
+require_relative "logrotate"
 
 Capistrano::Configuration.instance(:must_exist).load do |config|
   # Install NGINX when setting up the server
