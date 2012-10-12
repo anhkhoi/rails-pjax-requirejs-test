@@ -19,16 +19,31 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     task :install, roles: iptables_roles do
       sudo "apt-get install -y iptables"
       puts " ** installed IPTables firewall.".green
-      configure
+      configure_servers
+      puts " ** configured IPTables.".green
+      configure_preup
+      puts " ** IPTables set to restore on boot.".green
     end
     
-    per_server_task :configure, roles: iptables_roles do |server, roles|
+    per_server_task :configure_servers, roles: iptables_roles do |server, roles|
       puts " ** configuring IPTables for #{server} with roles: #{roles.join(", ")}".yellow
       upload_iptables_config({
         open_ports: open_ports.select do |p|
           (p[:roles] & Array(roles)).size > 0
         end
       })
+    end
+    
+    task :configure_preup, roles: iptables_roles do
+      destination = "/etc/network/if-pre-up.d/iptables"
+      # define the temporary upload location
+      tempfile_path = "/tmp/iptables_preup"
+      # upload the config to the server
+      put("#!/bin/sh\niptables-restore < #{iptables_config_file}\nexit 0\n", tempfile_path, mode: 0600)
+      # delete any existing file
+      sudo "rm -f #{destination}"
+      # move it to the right place
+      sudo "mv #{tempfile_path} #{destination}"
     end
   end
 
