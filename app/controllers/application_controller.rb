@@ -15,20 +15,12 @@ class ApplicationController < ActionController::Base
   
   helper_method :desktop_url
   def desktop_url(url = request.url)
-    if request_from_mobile?
-      url.gsub(/^(.*?)\/mobile\//, '\1/')
-    else
-      url
-    end
+    desktop_path(url)
   end
   
   helper_method :desktop_path
   def desktop_path(path = request.path)
-    if request_from_mobile?
-      path.gsub(/^(.*?)\/mobile\//, '\1/')
-    else
-      path
-    end
+    path.gsub(/^(.*?\/\/.*?)?\/(mobile\/)?(.*)$/, '\1/\3').freeze
   end
   
   helper_method :mobile_url
@@ -38,7 +30,7 @@ class ApplicationController < ActionController::Base
   
   helper_method :mobile_path
   def mobile_path(path = request.path)
-    path.gsub(/^(.*?\/\/.*?)?\/(mobile\/)?(.*)$/, '\1/mobile/\3')
+    path.gsub(/^(.*?\/\/.*?)?\/(mobile\/)?(.*)$/, '\1/mobile/\3').freeze
   end
   
   def prepare_for_mobile
