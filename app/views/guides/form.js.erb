@@ -1,11 +1,8 @@
-require(["jquery", "jquery.pjax"], function($) {
+(function($) {
 
   <% if @guide.errors.empty? %>
     // redirect to the guide
-    $.pjax({
-      url: "<%= url_for([@item, @guide]) %>",
-      container: "[data-pjax-container='main']"
-    })
+    Turbolinks.visit("<%=j url_for([@item, @guide]) %>")
   <% else %>
     // load the form
     <% if @guide.persisted? %>
@@ -19,4 +16,4 @@ require(["jquery", "jquery.pjax"], function($) {
     form.prepend("<%=j render "errors", errors: @guide.errors %>")
   <% end %>
 
-})
+})(jQuery)

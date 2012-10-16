@@ -1,6 +1,8 @@
 PjaxRequirejsTest::Application.routes.draw do
-  resources :items do
-    resources :guides, except: :index
+  scope "(:mobile)", defaults: { mobile: nil }, mobile: /(mobile)?/ do
+    resources :items do
+      resources :guides, except: :index
+    end
+    root to: "items#index"
   end
-  root to: "items#index"
 end

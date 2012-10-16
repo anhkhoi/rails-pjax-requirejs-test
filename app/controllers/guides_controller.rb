@@ -80,7 +80,7 @@ class GuidesController < ApplicationController
   end
   
   def load_guide
-    @guide = find_guide(params)
+    @guide = find_guide(@item, params)
   end
   
   def find_item(params)

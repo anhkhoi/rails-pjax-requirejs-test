@@ -1,0 +1,13 @@
+<% set_title(@item.title) %>
+
+<h1><%= @item.title %></h1>
+
+<p>
+  <%= @item.description %>
+</p>
+
+<p>
+  <%= link_to "View Guides", item_guides_path(@item) %> |
+  <%= link_to "Edit", edit_item_path(@item) %> |
+  <%= link_to "Back", items_path %>
+</p>

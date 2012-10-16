@@ -1,11 +1,8 @@
-require(["jquery", "jquery.pjax"], function($) {
+(function($) {
 
   <% if @item.errors.empty? %>
 		// redirect to the item
-		$.pjax({
-			url: "<%= url_for(@item) %>",
-			container: "[data-pjax-container='main']"
-		})
+		Turbolinks.visit("<%=j url_for(@item) %>")
   <% else %>
     // load the form
     <% if @item.persisted? %>
@@ -19,4 +16,4 @@ require(["jquery", "jquery.pjax"], function($) {
   	form.prepend("<%=j render "errors", errors: @item.errors %>")
   <% end %>
 
-})
+})(jQuery)
