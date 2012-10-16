@@ -1,9 +1,15 @@
 class GuidesController < ApplicationController
   before_filter :load_item
-  before_filter :load_guide, except: [ :new, :create ]
+  before_filter :load_guide, except: [ :index, :new, :create ]
   
-  # GET /guides/1
-  # GET /guides/1.json
+  def index
+    @guides = @item.guides
+
+    respond_with(@guides) do |format|
+      format.html { redirect_to @item }
+    end if stale? @guides.sort_by(&:updated_at).last
+  end
+
   def show
     respond_to do |format|
       format.html # show.html.erb
@@ -33,11 +39,11 @@ class GuidesController < ApplicationController
     respond_to do |format|
       if @guide.save
         @item.touch
-        format.html { redirect_to [@item, @guide], notice: "Guide was successfully created." }
+        format.any(:html, :mobile) { redirect_to [@item, @guide], notice: "Guide was successfully created." }
         format.json { render json: @guide, status: :created, location: [@item, @guide] }
         format.js { render :form }
       else
-        format.html { render action: "new" }
+        format.any(:html, :mobile) { render action: "new" }
         format.json { render json: @guide.errors, status: :unprocessable_entity }
         format.js { render :form }
       end
@@ -50,7 +56,7 @@ class GuidesController < ApplicationController
     respond_to do |format|
       if @guide.update_attributes(params[:guide])
         @item.touch
-        format.html { redirect_to [@item, @guide], notice: "Guide was successfully updated." }
+        format.any(:html, :mobile) { redirect_to [@item, @guide], notice: "Guide was successfully updated." }
         format.json { render json: @guide }
         format.js { render :form }
       else
@@ -69,6 +75,7 @@ class GuidesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to @item, notice: "Guide was successfully deleted." }
+      format.mobile { redirect_to item_guides_path(@item), notice: "Guide was successfully deleted." }
       format.json { head :no_content }
       format.js
     end

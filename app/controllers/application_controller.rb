@@ -2,6 +2,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   
   before_filter :prepare_for_mobile
+  
+  respond_to :html, :mobile, :js
+  
 
   protected
   def set_title(title)
@@ -37,6 +40,22 @@ class ApplicationController < ActionController::Base
     if request_from_mobile?
       request.format = :mobile
       params["mobile"] = "mobile"
+    end
+  end
+  
+  private
+  def _compute_redirect_to_location(options)
+    # ignore our direct calls for desktop/mobile URLs
+    if options.kind_of?(String) && options.frozen?
+      super
+    # if it's from a mobile
+    elsif request_from_mobile?
+      # mobilify the url
+      mobile_url(super)
+    # if it's a desktop request
+    else
+      # process as normal
+      super
     end
   end
 end

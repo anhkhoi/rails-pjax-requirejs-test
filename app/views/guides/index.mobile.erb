@@ -1,12 +1,6 @@
-<% set_title(@item.title) %>
+<% set_title("Guides - #{@item.title}") %>
 
-<h1><%= @item.title %></h1>
-
-<p>
-  <%= @item.description %>
-</p>
-
-<h2>Guides</h2>
+<h1><%= @item.title %> Guides</h1>
 
 <table>
   <tr>
@@ -29,7 +23,6 @@
 </table>
 
 <p>
-  <%= link_to 'New Guide', new_item_guide_path(@item) %> |
-  <%= link_to 'Edit', edit_item_path(@item) %> |
-  <%= link_to 'Back', items_path %>
+  <%= link_to "New Guide", new_item_guide_path(@item) %> |
+  <%= link_to "Back", @item %>
 </p>
