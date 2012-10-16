@@ -8,41 +8,37 @@ class ApplicationController < ActionController::Base
     @title_tag_content = title
   end
   
+  helper_method :request_from_mobile?
   def request_from_mobile?
-    request.path =~ /^\/mobile\//
+    @request_from_mobile ||= (request.path =~ /^\/mobile\//)
   end
   
-  helper_method :desktop_url, :desktop_path, :mobile_url, :mobile_path
-  def desktop_url
+  helper_method :desktop_url
+  def desktop_url(url = request.url)
     if request_from_mobile?
-      request.url.gsub(/^(.*?)\/mobile\//, '\1/')
+      url.gsub(/^(.*?)\/mobile\//, '\1/')
     else
-      request.url
+      url
     end
   end
   
-  def desktop_path
+  helper_method :desktop_path
+  def desktop_path(path = request.path)
     if request_from_mobile?
-      request.path.gsub(/^(.*?)\/mobile\//, '\1/')
+      path.gsub(/^(.*?)\/mobile\//, '\1/')
     else
-      request.path
+      path
     end
   end
   
-  def mobile_url
-    if request_from_mobile?
-      request.url
-    else
-      request.url.gsub(/^(.*?\/\/.*?)\/(.*)$/, '\1/mobile/\2')
-    end
+  helper_method :mobile_url
+  def mobile_url(url = request.url)
+    mobile_path(url)
   end
   
-  def mobile_path
-    if request_from_mobile?
-      request.path
-    else
-      request.path.gsub(/^(.*?\/\/.*?)\/(.*)$/, '\1/mobile/\2')
-    end
+  helper_method :mobile_path
+  def mobile_path(path = request.path)
+    path.gsub(/^(.*?\/\/.*?)?\/(mobile\/)?(.*)$/, '\1/mobile/\3')
   end
   
   def prepare_for_mobile

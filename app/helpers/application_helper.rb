@@ -14,4 +14,12 @@ module ApplicationHelper
       end
     end
   end
+  
+  def url_for(*args)
+    if request_from_mobile?
+      mobile_url(super)
+    else
+      super
+    end
+  end
 end
