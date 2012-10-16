@@ -10,7 +10,7 @@ module ApplicationHelper
       elsif @title_tag_content
          @title_tag_content
       else
-        t("app.default_title", default: t("app.name"))
+        t("app.default_title", default: t("app.name", default: "App Name"))
       end
     end
   end
