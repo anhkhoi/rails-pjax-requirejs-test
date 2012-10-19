@@ -20,6 +20,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
         start_command: "/usr/local/bin/rvm-shell -c 'cd #{current_path} ; nohup bundle exec sidekiq -e #{rails_env} -C #{fetch :sidekiq_config_file} -P #{fetch :sidekiq_pid_file} >> #{fetch :sidekiq_log_file} 2>&1 &'",
         stop_command: "/usr/local/bin/rvm-shell -c 'if [ -d #{current_path} ] && [ -f #{fetch :sidekiq_pid_file} ]; then cd #{current_path} ; bundle exec sidekiqctl stop #{fetch :sidekiq_pid_file}; fi'"
       })
+      # note: can also use `su - myuser -c 'COMMAND'` to run via RVM shell 
       # ensure the syntax is valid
       monit.validate_syntax
     end
