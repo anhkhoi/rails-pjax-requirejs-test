@@ -11,12 +11,12 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   set :logrotate_template_dir, File.join(File.dirname(__FILE__), "templates/logrotate")
   
   namespace :logrotate do
-    task :install do
+    task :install, on_no_matching_servers: :continue do
       sudo "apt-get install -y logrotate"
       puts " ** installed logrotate.".green
     end
     
-    task :validate_syntax do
+    task :validate_syntax, on_no_matching_servers: :continue do
       sudo "logrotate -f #{logrotate_config_dir}/*"
     end
   end

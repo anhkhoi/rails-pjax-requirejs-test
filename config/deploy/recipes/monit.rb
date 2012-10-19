@@ -19,7 +19,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
 
   namespace :monit do
     desc "Installs Monit on the server"
-    task :install do
+    task :install, on_no_matching_servers: :continue do
       # install the service
       sudo "apt-get install -y -qq monit"
       puts " ** installed monit.".green
@@ -32,7 +32,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     end
     
     desc "Configures Monit for HTTP access"
-    task :configure_http_access do
+    task :configure_http_access, on_no_matching_servers: :continue do
       # adjust the config file where necessary
       run %Q(
         #{sudo} sed -i -e 's/# set httpd port/set httpd port/' #{monit_config_file};
@@ -44,7 +44,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     end
     
     desc "Configures Monit"
-    task :configure do
+    task :configure, on_no_matching_servers: :continue do
       # adjust the config file where necessary
       sudo "sed -i -e 's/  set daemon \\\([0-9]\\\{1,\\\}\\\)/  set daemon #{monit_check_interval}/' #{monit_config_file}"
       # ensure the changes were valid
@@ -53,47 +53,47 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     end
     
     desc "Tell monit to start"
-    task :start do
+    task :start, on_no_matching_servers: :continue do
       sudo "/etc/init.d/monit start"
       puts " ** monit started.".green
     end
     
     desc "Tell monit to stop"
-    task :stop do
+    task :stop, on_no_matching_servers: :continue do
       sudo "/etc/init.d/monit stop"
       puts " ** monit stopped.".green
     end
     
     desc "Tell monit to re-read it's configuration files"
-    task :reload do
+    task :reload, on_no_matching_servers: :continue do
       sudo "monit reload"
     end
     
     desc "Validates Monit configuration syntax"
-    task :validate_syntax do
+    task :validate_syntax, on_no_matching_servers: :continue do
       sudo "monit -t"
     end
     
     desc "Tell monit to start a service"
-    task :start_service do
+    task :start_service, on_no_matching_servers: :continue do
       sudo "monit start #{config[:process] || ENV["process"] || "all"}"
       puts " ** #{config[:process] || ENV["process"] || "all services"} started.".green
     end
     
     desc "Tell monit to stop a service"
-    task :stop_service do
+    task :stop_service, on_no_matching_servers: :continue do
       sudo "monit stop #{config[:process] || ENV["process"] || "all"}"
       puts " ** #{config[:process] || ENV["process"] || "all services"} stopped.".green
     end
     
     desc "Tell monit to restart a service"
-    task :restart_service do
+    task :restart_service, on_no_matching_servers: :continue do
       sudo "monit restart #{config[:process] || ENV["process"] || "all"}"
       puts " ** #{config[:process] || ENV["process"] || "all services"} restarted.".green
     end
     
     desc "Tell monit to reload a service"
-    task :reload_service do
+    task :reload_service, on_no_matching_servers: :continue do
       sudo "monit reload #{config[:process] || ENV["process"] || "all"}"
       puts " ** #{config[:process] || ENV["process"] || "all services"} reloaded.".green
     end

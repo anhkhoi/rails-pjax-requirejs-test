@@ -23,13 +23,13 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
 
   namespace :nginx do
     desc "Installs NGINX"
-    task :install, roles: nginx_roles do
+    task :install, roles: nginx_roles, on_no_matching_servers: :continue do
       sudo "apt-get install -y -qq nginx"
       puts " ** installed NGINX.".green
     end
     
     desc "Configures monit to watch NGINX"
-    task :configure_monit, roles: nginx_roles do
+    task :configure_monit, roles: nginx_roles, on_no_matching_servers: :continue do
       # upload the config file
       upload_monit_config("nginx", {
         template: "nginx.erb",
@@ -46,7 +46,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     end
     
     desc "Configures logrotate to watch NGINX"
-    task :configure_logrotate, roles: nginx_roles do
+    task :configure_logrotate, roles: nginx_roles, on_no_matching_servers: :continue do
       # upload the config file
       upload_logrotate_config("nginx", {
         path: "/var/log/nginx/*.log",
@@ -58,19 +58,19 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     end
     
     desc "Start NGINX"
-    task :start, roles: nginx_roles do
+    task :start, roles: nginx_roles, on_no_matching_servers: :continue do
       config[:process] = "nginx"
       monit.start_service
     end
     
     desc "Stop NGINX"
-    task :stop, roles: nginx_roles do
+    task :stop, roles: nginx_roles, on_no_matching_servers: :continue do
       config[:process] = "nginx"
       monit.stop_service
     end
     
     desc "Restart NGINX"
-    task :restart, roles: nginx_roles do
+    task :restart, roles: nginx_roles, on_no_matching_servers: :continue do
       config[:process] = "nginx"
       monit.restart_service
     end

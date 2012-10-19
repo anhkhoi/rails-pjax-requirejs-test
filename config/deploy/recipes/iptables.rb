@@ -16,7 +16,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   end
 
   namespace :iptables do
-    task :install, roles: iptables_roles do
+    task :install, roles: iptables_roles, on_no_matching_servers: :continue do
       sudo "apt-get install -y iptables"
       puts " ** installed IPTables firewall.".green
       configure_servers
@@ -25,7 +25,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
       puts " ** IPTables set to restore on boot.".green
     end
     
-    per_server_task :configure_servers, roles: iptables_roles do |server, roles|
+    per_server_task :configure_servers, roles: iptables_roles, on_no_matching_servers: :continue do |server, roles|
       puts " ** configuring IPTables for #{server} with roles: #{roles.join(", ")}".yellow
       upload_iptables_config({
         open_ports: open_ports.select do |p|
@@ -34,7 +34,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
       })
     end
     
-    task :configure_preup, roles: iptables_roles do
+    task :configure_preup, roles: iptables_roles, on_no_matching_servers: :continue do
       destination = "/etc/network/if-pre-up.d/iptables"
       # define the temporary upload location
       tempfile_path = "/tmp/iptables_preup"

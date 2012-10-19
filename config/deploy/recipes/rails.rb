@@ -5,7 +5,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   after "deploy:bootstrap", "rails:configure_logrotate"
 
   namespace :rails do
-    task :configure_logrotate do
+    task :configure_logrotate, on_no_matching_servers: :continue do
       # upload the config file
       upload_logrotate_config("rails_app", {
         path: File.join(shared_path, "log/*.log")

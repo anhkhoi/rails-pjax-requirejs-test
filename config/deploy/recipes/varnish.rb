@@ -25,7 +25,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
 
   namespace :varnish do
     desc "Installs varnish"
-    task :install, roles: varnish_roles do
+    task :install, roles: varnish_roles, on_no_matching_servers: :continue do
       sudo "apt-get install -y -qq varnish"
       puts " ** installed varnish.".green
       # adjust the config file where necessary
@@ -35,7 +35,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     end
 
     desc "Configures Monit to watch varnish"
-    task :configure_monit, roles: varnish_roles do
+    task :configure_monit, roles: varnish_roles, on_no_matching_servers: :continue do
       # upload the config file
       upload_monit_config("varnish", {
         process_name: "varnishd",
@@ -48,7 +48,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     end
 
     desc "Configures logrotate to watch varnish"
-    task :configure_logrotate, roles: varnish_roles do
+    task :configure_logrotate, roles: varnish_roles, on_no_matching_servers: :continue do
       # upload the config file
       upload_logrotate_config("varnish", {
         path: "/var/log/varnish/*.log",
