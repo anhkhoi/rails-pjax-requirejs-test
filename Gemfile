@@ -8,6 +8,7 @@ gem "bson_ext", "~> 1.7.0"
 
 # Caching
 gem "dalli"
+#gem "cache_digests"
 
 # App boot scripts
 gem "foreman"
