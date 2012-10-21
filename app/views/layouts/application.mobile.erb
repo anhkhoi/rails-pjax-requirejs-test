@@ -2,7 +2,8 @@
 <head>
 
   <%= title_tag %>
-  <%= stylesheet_link_tag "mobile", :media => "all" %>
+  <%= stylesheet_link_tag "mobile", :media => "screen, handheld" %>
+  <%= stylesheet_link_tag "print", :media => "print" %>
   <%= csrf_meta_tags %>
   <%= tag(:link, rel: "canonical", href: desktop_url) %>
 
