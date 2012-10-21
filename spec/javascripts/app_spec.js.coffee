@@ -1,6 +1,7 @@
 require ["app"], (App) ->
 
   describe "App", ->
+
     describe "#boot", ->
       it "should have a method called 'boot'", ->
         app = new App()

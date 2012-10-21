@@ -12,3 +12,5 @@ define "controllers/base_controller", ->
       if action && @[action]
         # run the method
         @[action]()
+    
+    unload: -> # no-op

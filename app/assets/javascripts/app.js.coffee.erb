@@ -8,12 +8,21 @@ define "app", ["jquery"], ($) ->
 		%>]
 
 		constructor: (@view) ->
+			@controllers = new Array()
 
 		boot: ->
 			@view.on("page:change", =>
-				$("[data-controller]").each (i,el) =>
-					@page_specifics($(el))
+				@page_changed($("[data-controller]"))
 			).trigger("page:change")
+
+		unload_controllers: ->
+			while controller = @controllers.pop()
+				controller.unload()
+
+		page_changed: (controller_views) ->
+			@unload_controllers()
+			controller_views.each (i,el) =>
+				@page_specifics($(el))
 
 		page_specifics: (view) ->
 			# unless the view is already initialized
@@ -27,4 +36,6 @@ define "app", ["jquery"], ($) ->
 					# load the controller specific module
 					require [key], (Controller) =>
 						# initialize the controller with the view
-						new Controller(view)
+						controller = new Controller(view)
+						# append it to the active controllers
+						@controllers.push(controller)

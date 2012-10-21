@@ -12,3 +12,6 @@ define ["controllers/base_controller"], (BaseController) ->
 
     show: ->
       console.log("items#show")
+    
+    unload: ->
+      console.log("unloading items")
