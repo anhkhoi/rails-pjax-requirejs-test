@@ -8,6 +8,7 @@ describe GuidesController do
   before(:each) do
     subject.stub(:find_item).and_return(item)
     subject.stub(:find_guide).and_return(guide)
+    Guide.any_instance.stub(:touch_item).and_return(true)
   end
 
   describe "#new" do

@@ -38,7 +38,6 @@ class GuidesController < ApplicationController
 
     respond_to do |format|
       if @guide.save
-        @item.touch
         format.any(:html, :mobile) { redirect_to [@item, @guide], notice: "Guide was successfully created." }
         format.json { render json: @guide, status: :created, location: [@item, @guide] }
         format.js { render :form }
@@ -55,7 +54,6 @@ class GuidesController < ApplicationController
   def update
     respond_to do |format|
       if @guide.update_attributes(params[:guide])
-        @item.touch
         format.any(:html, :mobile) { redirect_to [@item, @guide], notice: "Guide was successfully updated." }
         format.json { render json: @guide }
         format.js { render :form }
@@ -71,7 +69,6 @@ class GuidesController < ApplicationController
   # DELETE /guides/1.json
   def destroy
     @guide.destroy
-    @item.touch
 
     respond_to do |format|
       format.html { redirect_to @item, notice: "Guide was successfully deleted." }
