@@ -7,7 +7,7 @@ class GuidesController < ApplicationController
 
     respond_with(@guides) do |format|
       format.html { redirect_to @item }
-    end if stale? @guides.sort_by(&:updated_at).last
+    end
   end
 
   def show
