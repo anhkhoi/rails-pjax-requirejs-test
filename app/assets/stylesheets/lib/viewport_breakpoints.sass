@@ -1,10 +1,30 @@
-=media($device)
+//
+// see:
+// https://gist.github.com/3828790
+//
+
+$mobile_max_width: 480px
+$tablet_min_width: 801px
+
+=media($device, $retina: false)
   @if $device == tablet
-    @media (min-width: 800px)
-      @content
+    @if $retina == true
+      @media (min-width: $tablet_min_width) and (min-device-pixel-ratio: 2)
+        @content
+    @else
+      @media (min-width: $tablet_min_width)
+        @content
   @else if $device == tablet_light
-    @media (min-width: 481px) and (max-width: 799px)
-      @content
+    @if $retina == true
+      @media (min-width: $mobile_max_width + 1px) and (max-width: $tablet_min_width - 1px) and (min-device-pixel-ratio: 2)
+        @content
+    @else
+      @media (min-width: $mobile_max_width + 1px) and (max-width: $tablet_min_width - 1px)
+        @content
   @else if $device == mobile
-    @media (max-width: 480px)
-      @content
+    @if $retina == true
+      @media (max-width: $mobile_max_width) and (min-device-pixel-ratio: 2)
+        @content
+    @else
+      @media (max-width: $mobile_max_width)
+        @content
