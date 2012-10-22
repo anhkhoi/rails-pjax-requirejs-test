@@ -6,9 +6,9 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   
   # settings
   _cset(:sidekiq_roles) { :app }
-  _cset(:sidekiq_pid_file) { shared_path.join("tmp/pids/sidekiq.pid") }
-  _cset(:sidekiq_config_file) { current_path.join("config/sidekiq.yml") }
-  _cset(:sidekiq_log_file) { shared_path.join("log/sidekiq.log") }
+  _cset(:sidekiq_pid_file) { File.join(shared_path, "tmp/pids/sidekiq.pid") }
+  _cset(:sidekiq_config_file) { File.join(current_path, "config/sidekiq.yml") }
+  _cset(:sidekiq_log_file) { File.join(shared_path, "log/sidekiq.log") }
 
   namespace :sidekiq do
     desc "Configures Monit to watch sidekiq"
