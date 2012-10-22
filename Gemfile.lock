@@ -174,6 +174,9 @@ GEM
       activesupport (= 3.2.8)
       bundler (~> 1.0)
       railties (= 3.2.8)
+    rails-behaviors (0.4.1)
+      coffee-script-source (~> 1.1)
+      sprockets (~> 2.0)
     railties (3.2.8)
       actionpack (= 3.2.8)
       activesupport (= 3.2.8)
@@ -277,6 +280,7 @@ DEPENDENCIES
   mongoid-rspec
   quiet_assets
   rails (= 3.2.8)
+  rails-behaviors (~> 0.4.1)
   rake
   rb-fsevent
   requirejs-rails (~> 0.9.0)

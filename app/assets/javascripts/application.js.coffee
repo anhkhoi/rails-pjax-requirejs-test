@@ -2,7 +2,7 @@
 #= require require_config
 #= require require
 #= require jquery
-#= require jquery_ujs
+#= require rails
 #= require controllers/base_controller
 #= require app
 
