@@ -29,6 +29,10 @@ gem "jquery-rails"
 gem "requirejs-rails", "~> 0.9.0"
 gem "turbolinks"
 
+# Validation
+gem "client_side_validations"
+gem "client_side_validations-turbolinks"
+
 # Silence the asset pipeline
 gem "quiet_assets", group: :development
 

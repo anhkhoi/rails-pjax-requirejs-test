@@ -1,4 +1,4 @@
-<%= form_for([@item, @guide], html: { data: { remote: true, type: "script" } }) do |f| %>
+<%= form_for([@item, @guide], validate: true, html: { data: { remote: true, type: "script" } }) do |f| %>
   <% if @guide.errors.any? %>
     <%= render "errors", errors: @guide.errors %>
   <% end %>

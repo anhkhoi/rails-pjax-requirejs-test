@@ -1,5 +1,5 @@
 #= require turbolinks
-#= require require_config
+#= require preload
 #= require require
 #= require jquery
 #= require rails

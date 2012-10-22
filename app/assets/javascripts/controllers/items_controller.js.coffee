@@ -1,6 +1,10 @@
 define ["controllers/base_controller"], (BaseController) ->
   
   class ItemsController extends BaseController
+    @before_filter "validate_forms", {
+      only: ["new", "edit"]
+    }
+
     index: ->
       console.log("items#index")
 

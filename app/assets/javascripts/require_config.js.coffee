@@ -1,3 +1,0 @@
-window.require = {
-  baseUrl: "/assets"
-}
