@@ -21,10 +21,6 @@ describe ItemsController do
     it "should assign @items" do
       expect(assigns(:items)).to eq([item])
     end
-    
-    it "should be cached" do
-      expect(response.headers).to have_key("ETag")
-    end
   end
 
   describe "#new" do

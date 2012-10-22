@@ -3,8 +3,7 @@ class ItemsController < ApplicationController
   # GET /items.json
   def index
     @items = load_items(params)
-    
-    # HTTP cache
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @items }
@@ -15,8 +14,7 @@ class ItemsController < ApplicationController
   # GET /items/1.json
   def show
     @item = load_item(params)
-    
-    # HTTP cache
+
     respond_to do |format|
       format.html { @guides = @item.guides }
       format.json { render json: @item }
