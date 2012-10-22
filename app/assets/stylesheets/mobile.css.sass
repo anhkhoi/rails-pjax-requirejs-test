@@ -1,8 +1,14 @@
 @import "compass"
 @import "compass/reset"
+@import "lib/viewport_breakpoints.sass"
 
 body
   margin: 0
   padding: 20px
   border-top: 2px solid red
   font: 13px/1.5 "helvetica neue", arial, sans-serif
+
+  +media(mobile)
+    border-top-color: green
+  +media(tablet_light)
+    border-top-color: yellow
