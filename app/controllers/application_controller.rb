@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
   
   helper_method :request_from_mobile?
   def request_from_mobile?
-    @request_from_mobile ||= (request.path =~ /^\/mobile\//)
+    @request_from_mobile ||= (request.path =~ /^\/mobile(\/.*)?$/)
   end
   
   helper_method :desktop_url
