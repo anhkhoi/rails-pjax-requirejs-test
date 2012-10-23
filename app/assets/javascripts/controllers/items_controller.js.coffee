@@ -17,10 +17,17 @@ define ["controllers/base_controller"], (BaseController) ->
     show: ->
       console.log("items#show")
       require ["lib/sse_stream"], (SSEStream) =>
-        @stream = new SSEStream(window.location.href + "/live")
-        @stream.on_message (e) ->
+        stream = new SSEStream(window.location.href + "/live")
+        stream.on "message", (e) ->
           console.log(e.data)
+        @streams ||= []
+        @streams.push(stream)
     
     unload: ->
       console.log("unloading items")
-      @stream.close() if @stream
+      @close_streams()
+    
+    close_streams: ->
+      if @streams
+        while stream = @streams.pop()
+          stream.close()
