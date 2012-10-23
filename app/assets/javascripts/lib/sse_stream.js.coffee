@@ -9,7 +9,7 @@ define "lib/sse_stream", ->
       @define_callback_events()
       # call close callbacks on error that's a close
       @on "error", (e) =>
-        if e.readyState == EventSource.CLOSED
+        if e.eventPhase == EventSource.CLOSED
           @event_method("close")(e)
           
     define_callback_events: ->
