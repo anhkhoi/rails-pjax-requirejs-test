@@ -167,6 +167,8 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.3.1)
+    puma (1.6.3)
+      rack (~> 1.2)
     quiet_assets (1.0.1)
       railties (~> 3.1)
     rack (1.4.1)
@@ -290,6 +292,7 @@ DEPENDENCIES
   jquery-rails
   mongoid (~> 3.0.5)
   mongoid-rspec
+  puma
   quiet_assets
   rails (= 3.2.8)
   rails-behaviors (~> 0.4.1)

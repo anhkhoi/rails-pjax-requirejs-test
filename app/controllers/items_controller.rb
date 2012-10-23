@@ -1,4 +1,6 @@
 class ItemsController < ApplicationController
+  include ActionController::Live
+  
   # GET /items
   # GET /items.json
   def index
@@ -19,6 +21,24 @@ class ItemsController < ApplicationController
       format.html { @guides = @item.guides }
       format.json { render json: @item }
     end if stale? @item
+  end
+  
+  # GET /items/1/live
+  def live
+    response.headers["Content-Type"] = "text/event-stream"
+    
+    sse = SSEStream.new(response.stream)
+    
+    begin
+      loop do
+        sse.write(time: Time.now)
+        sleep 1
+      end
+    rescue IOError
+      # no-op (disconnect)
+    ensure
+      sse.close
+    end
   end
 
   # GET /items/new

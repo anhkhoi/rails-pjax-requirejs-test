@@ -2,6 +2,9 @@ source "https://rubygems.org"
 
 gem "rails", "3.2.8"
 
+# Web server
+gem "puma"
+
 # Database
 gem "mongoid", "~> 3.0.5"
 gem "bson_ext", "~> 1.7.0"
