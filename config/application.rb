@@ -42,6 +42,9 @@ module PjaxRequirejsTest
     # Use memcache for cache
     config.cache_store = :dalli_store
     
+    # Enable threaded mode
+    config.threadsafe!
+    
     config.generators do |g|
       g.orm :mongoid
       g.stylesheets false

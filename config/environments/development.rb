@@ -27,8 +27,4 @@ PjaxRequirejsTest::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
-  
-  # Allow SSE
-  config.preload_frameworks = true
-  config.allow_concurrency = true
 end
