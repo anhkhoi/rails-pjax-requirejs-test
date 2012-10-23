@@ -4,6 +4,4 @@ services = %w(rails mongod memcached redis-server sidekiq)
 
 puts "Killing any of the following processes: #{services.join(", ")}"
 
-services.each do |service|
-	system("sudo killall #{service} 2> /dev/null")
-end
+system("sudo killall {#{services.join(",")}} 2> /dev/null")
