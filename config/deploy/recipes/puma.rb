@@ -10,7 +10,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   _cset(:puma_state_file) { File.join(shared_path, "tmp/pids/puma.state") }
   _cset(:puma_log_file) { File.join(shared_path, "log/puma.log") }
   _cset(:puma_shell) { capture("which rvm-shell").chomp }
-  _cset(:puma_config) { File.join(current_path, "config/puma/#{rails_env}") }
+  _cset(:puma_config_file) { File.join(current_path, "config/puma/#{rails_env}.rb") }
 
   namespace :puma do
     desc "Configures Monit to watch puma"
