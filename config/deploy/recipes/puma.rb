@@ -10,7 +10,6 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   _cset(:puma_state_file) { File.join(shared_path, "tmp/pids/puma.state") }
   _cset(:puma_log_file) { File.join(shared_path, "log/puma.log") }
   _cset(:puma_shell) { capture("which rvm-shell").chomp }
-  _cset(:puma_config_file) { File.join(current_path, "config/puma/#{rails_env}.rb") }
 
   namespace :puma do
     desc "Configures Monit to watch puma"
@@ -19,7 +18,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
       upload_monit_config("puma", {
         process_name: "puma",
         pid_file: puma_pid_file,
-        start_command: "#{fetch :puma_shell} -c 'cd #{current_path} ; nohup bundle exec puma -e #{rails_env} -C #{fetch :puma_config_file} -S #{fetch :puma_state_file} -P #{fetch :puma_pid_file} >> #{fetch :puma_log_file} 2>&1 &'",
+        start_command: "#{fetch :puma_shell} -c 'cd #{current_path} ; nohup bundle exec puma -e #{rails_env} -S #{fetch :puma_state_file} --pidfile=#{fetch :puma_pid_file} >> #{fetch :puma_log_file} 2>&1 &'",
         stop_command: "#{fetch :puma_shell} -c 'if [ -d #{current_path} ] && [ -f #{fetch :puma_pid_file} ]; then cd #{current_path} ; pumactl --state #{fetch :puma_state_file} stop ; fi ; rm -f #{fetch :puma_pid_file} #{fetch :puma_state_file}'",
         restart_command: "#{fetch :puma_shell} pumactl --state #{fetch :puma_state_file} restart"
       })
