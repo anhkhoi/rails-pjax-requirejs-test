@@ -9,10 +9,10 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   before "elasticsearch:install", "elasticsearch:install_prerequisites"
 
   # Configure the monit.d config file after install
-  #after "elasticsearch:install", "elasticsearch:configure_monit"
+  after "elasticsearch:install", "elasticsearch:configure_monit"
 
   # Configure the logrotate.d config file after install
-  #after "elasticsearch:install", "elasticsearch:configure_logrotate"
+  after "elasticsearch:install", "elasticsearch:configure_logrotate"
 
   _cset(:elasticsearch_version) { "0.19.11" }
   _cset(:elasticsearch_package) { "https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-#{fetch(:elasticsearch_version)}.deb" }

@@ -5,6 +5,9 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   # Install Monit on the server during setup
   after "deploy:bootstrap", "monit:install"
   
+  # Reload all scripts after setup
+  after "deploy:setup", "monit:reload"
+  
   # Path to the monitrc file
   set :monit_config_file, "/etc/monit/monitrc"
   
