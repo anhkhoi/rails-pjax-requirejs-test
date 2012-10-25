@@ -12,7 +12,7 @@ class GuidesController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html # show.html.erb
+      format.html { render stream: true }
       format.json { render json: @guide }
     end if stale? @guide
   end

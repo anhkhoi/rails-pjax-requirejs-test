@@ -1,6 +1,6 @@
 module ApplicationHelper
   def set_title(title)
-    content_for(:title, title)
+    provide :title, title
   end
   
   def title_tag

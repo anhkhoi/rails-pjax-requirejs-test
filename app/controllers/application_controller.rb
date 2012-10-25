@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   before_filter :prepare_for_mobile
   
   respond_to :html, :mobile, :js
-  
 
   protected
   def set_title(title)

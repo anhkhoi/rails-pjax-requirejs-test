@@ -7,7 +7,7 @@ class ItemsController < ApplicationController
     @items = load_items(params)
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { render stream: true }
       format.json { render json: @items }
     end
   end
@@ -18,7 +18,10 @@ class ItemsController < ApplicationController
     @item = load_item(params)
 
     respond_to do |format|
-      format.html { @guides = @item.guides }
+      format.html do
+        @guides = @item.guides
+        render stream: true
+      end
       format.json { render json: @item }
     end if stale? @item
   end
