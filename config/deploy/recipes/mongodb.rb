@@ -14,17 +14,13 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   # Configure the logrotate.d config file after install
   after "mongodb:install", "mongodb:configure_logrotate"
 
-  # loads the user's setting for which roles mongodb is to be installed on
-  def mongodb_roles
-    [:db]
-  end
 
-  # sets the location of the config file
-  set :mongodb_config_file, "/etc/mongodb.conf"
+  _cset(:mongodb_roles) { [:db] }
+  _cset(:mongodb_config_file) { "/etc/mongodb.conf" }
 
   namespace :mongodb do
     desc "Handles pre-requisites of mongodb"
-    task :install_prerequisites, roles: mongodb_roles do
+    task :install_prerequisites, roles: fetch(:mongodb_roles) do
       sudo "apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10"
       source = "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen"
       put(source, "/tmp/10gen.list", mode: 0600)
@@ -33,13 +29,13 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     end
     
     desc "Installs mongodb"
-    task :install, roles: mongodb_roles, on_no_matching_servers: :continue do
+    task :install, roles: fetch(:mongodb_roles), on_no_matching_servers: :continue do
       sudo "apt-get install -y -qq mongodb-10gen"
       puts " ** installed mongodb."
     end
 
     desc "Configures Monit to watch mongodb"
-    task :configure_monit, roles: mongodb_roles, on_no_matching_servers: :continue do
+    task :configure_monit, roles: fetch(:mongodb_roles), on_no_matching_servers: :continue do
       # upload the config file
       upload_monit_config("mongodb", {
         process_name: "mongodb",
@@ -52,7 +48,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     end
 
     desc "Configures logrotate to watch mongodb"
-    task :configure_logrotate, roles: mongodb_roles, on_no_matching_servers: :continue do
+    task :configure_logrotate, roles: fetch(:mongodb_roles), on_no_matching_servers: :continue do
       # upload the config file
       upload_logrotate_config("mongodb", {
         path: "/var/log/mongodb/*",
@@ -63,19 +59,19 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     end
     
     desc "Start MongoDB"
-    task :start, roles: mongodb_roles, on_no_matching_servers: :continue do
+    task :start, roles: fetch(:mongodb_roles), on_no_matching_servers: :continue do
       config[:process] = "mongodb"
       monit.start_service
     end
     
     desc "Stop MongoDB"
-    task :stop, roles: mongodb_roles, on_no_matching_servers: :continue do
+    task :stop, roles: fetch(:mongodb_roles), on_no_matching_servers: :continue do
       config[:process] = "mongodb"
       monit.stop_service
     end
     
     desc "Restart MongoDB"
-    task :restart, roles: mongodb_roles, on_no_matching_servers: :continue do
+    task :restart, roles: fetch(:mongodb_roles), on_no_matching_servers: :continue do
       config[:process] = "mongodb"
       monit.restart_service
     end
