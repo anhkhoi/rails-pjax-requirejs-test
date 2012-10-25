@@ -11,7 +11,7 @@ set :default_stage, "development"
 # RVM config
 set :rvm_ruby_string, ENV['GEM_HOME'].gsub(/.*\//,"")
 
-require "colored"
+require "capistrano_colors"
 require "capistrano/ext/multistage"
 require "bundler/capistrano"
 require "rvm/capistrano"

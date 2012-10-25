@@ -28,9 +28,9 @@ namespace :vagrant do
   task :verify_connection do
     begin
       capture "whoami"
-      puts " ** verified successful connection to Vagrant.".green
+      puts " ** verified successful connection to Vagrant."
     rescue => e
-      abort "Connection to Vagrant failed - #{e.message}".red
+      abort " !! Connection to Vagrant failed - #{e.message}"
     end
   end
 end
