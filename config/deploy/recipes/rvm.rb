@@ -1,9 +1,10 @@
 Capistrano::Configuration.instance(:must_exist).load do
   # Install RVM on any server in the config
   before "deploy:setup", "rvm:disable"
-  before "deploy:setup", "rvm:install_rvm"
+  before "deploy:bootstrap", "rvm:install_rvm"
   after "rvm:install_rvm", "rvm:install_ruby"
   after "rvm:install_rvm", "rvm:enable"
+  after "deploy:bootstrap", "rvm:enable"
   after "deploy:setup", "rvm:enable"
   
   # Install RVM's requirements before installing it
@@ -26,7 +27,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     desc "Installs RVM requirements"
     task :install_prerequisites, roles: rvm_roles, on_no_matching_servers: :continue do
       packages = %w(build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison)
-      sudo "apt-get install -y -qq #{packages.join(" ")}"
+      sudo "apt-get install -y #{packages.join(" ")}"
     end
     
     desc "Disables RVM usage in Capistrano tasks"
