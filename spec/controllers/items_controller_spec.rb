@@ -38,7 +38,7 @@ describe ItemsController do
   describe "#create" do
     before(:each) do
       Item.any_instance.should_receive(:save).and_return(true)
-      post :create, item: {}
+      post :create, item: attributes_for(:item)
     end
   
     it "should respond with success" do
@@ -77,7 +77,7 @@ describe ItemsController do
   describe "#update" do
     before(:each) do
       item.should_receive(:update_attributes).and_return(true)
-      put :update, id: "123", item: {}
+      put :update, id: "123", item: attributes_for(:item)
     end
   
     it "should respond with redirect" do

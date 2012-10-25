@@ -18,11 +18,11 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   namespace :iptables do
     task :install, roles: iptables_roles, on_no_matching_servers: :continue do
       sudo "apt-get install -y iptables"
-      puts " ** installed IPTables firewall.".green
+      puts " ** installed IPTables firewall."
       configure_servers
-      puts " ** configured IPTables.".green
+      puts " ** configured IPTables."
       configure_preup
-      puts " ** IPTables set to restore on boot.".green
+      puts " ** IPTables set to restore on boot."
     end
     
     per_server_task :configure_servers, roles: iptables_roles, on_no_matching_servers: :continue do |server, roles|

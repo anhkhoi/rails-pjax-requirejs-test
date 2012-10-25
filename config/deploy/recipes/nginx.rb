@@ -25,7 +25,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     desc "Installs NGINX"
     task :install, roles: nginx_roles, on_no_matching_servers: :continue do
       sudo "apt-get install -y -qq nginx"
-      puts " ** installed NGINX.".green
+      puts " ** installed NGINX."
     end
     
     desc "Configures monit to watch NGINX"

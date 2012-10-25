@@ -26,10 +26,10 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     desc "Installs Memcached"
     task :install, roles: memcached_roles, on_no_matching_servers: :continue do
       sudo "apt-get install -y -qq memcached"
-      puts " ** installed memcached.".green
+      puts " ** installed memcached."
       # adjust the config file where necessary
       sudo "sed -i -e 's/\\-m \\\([0-9]\\\{1,\\\}\\\)/\\-m #{memcached_memory_cap}/' #{memcached_config_file}"
-      puts " ** configured memcached with a #{memcached_memory_cap}mb memory cap.".green
+      puts " ** configured memcached with a #{memcached_memory_cap}mb memory cap."
     end
     
     desc "Configures Monit to watch Memcached"

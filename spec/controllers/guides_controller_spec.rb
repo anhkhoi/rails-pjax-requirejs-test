@@ -30,7 +30,7 @@ describe GuidesController do
   describe "#create" do
     before(:each) do
       Guide.any_instance.should_receive(:save).and_return(true)
-      post :create, item_id: "123", guide: {}
+      post :create, item_id: "123", guide: attributes_for(:guide)
     end
 
     it "should respond with success" do
@@ -77,7 +77,7 @@ describe GuidesController do
   describe "#update" do
     before(:each) do
       guide.should_receive(:update_attributes).and_return(true)
-      put :update, item_id: "123", id: "456", guide: {}
+      put :update, item_id: "123", id: "456", guide: attributes_for(:guide)
     end
 
     it "should respond with redirect" do

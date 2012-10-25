@@ -13,7 +13,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   namespace :logrotate do
     task :install, on_no_matching_servers: :continue do
       sudo "apt-get install -y logrotate"
-      puts " ** installed logrotate.".green
+      puts " ** installed logrotate."
     end
     
     task :validate_syntax, on_no_matching_servers: :continue do

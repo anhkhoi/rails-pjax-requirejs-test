@@ -6,7 +6,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     desc "Updates aptitude"
     task :update, on_no_matching_servers: :continue do
       sudo "apt-get -y -qq update"
-      puts " ** updated aptitude.".green
+      puts " ** updated aptitude."
     end
   end
 end

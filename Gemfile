@@ -45,7 +45,7 @@ gem "strong_parameters"
 group :development do
   gem "capistrano"
   gem "rvm-capistrano"
-  gem "colored"
+  gem "capistrano_colors"
 end
 gem "turbo-sprockets-rails3" # improves asset pipeline speed
 

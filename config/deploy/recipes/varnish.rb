@@ -27,11 +27,11 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     desc "Installs varnish"
     task :install, roles: varnish_roles, on_no_matching_servers: :continue do
       sudo "apt-get install -y -qq varnish"
-      puts " ** installed varnish.".green
+      puts " ** installed varnish."
       # adjust the config file where necessary
       sudo "sed -i -e 's/    \\.host = \".*\"\\;/    \\.host = \"#{varnish_proxy_host}\"\\;/' #{varnish_config_file}"
       sudo "sed -i -e 's/    \\.port = \".*\"\\;/    \\.port = \"#{varnish_proxy_port}\"\\;/' #{varnish_config_file}"
-      puts " ** configured varnish to proxy #{varnish_proxy_host}:#{varnish_proxy_port}.".green
+      puts " ** configured varnish to proxy #{varnish_proxy_host}:#{varnish_proxy_port}."
     end
 
     desc "Configures Monit to watch varnish"
