@@ -1,4 +1,4 @@
-require 'action_dispatch/http/response'
+require_relative '../action_dispatch/http/response'
 require 'delegate'
 
 module ActionController

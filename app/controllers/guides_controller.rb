@@ -34,7 +34,7 @@ class GuidesController < ApplicationController
   # POST /guides
   # POST /guides.json
   def create
-    @guide = @item.guides.build(params[:guide])
+    @guide = @item.guides.build(guide_params)
 
     respond_to do |format|
       if @guide.save
@@ -53,7 +53,7 @@ class GuidesController < ApplicationController
   # PUT /guides/1.json
   def update
     respond_to do |format|
-      if @guide.update_attributes(params[:guide])
+      if @guide.update_attributes(guide_params)
         format.any(:html, :mobile) { redirect_to [@item, @guide], notice: "Guide was successfully updated." }
         format.json { render json: @guide }
         format.js { render :form }
@@ -79,6 +79,10 @@ class GuidesController < ApplicationController
   end
   
   protected
+  def guide_params
+    params.require(:guide).permit(:title, :description)
+  end
+  
   def load_item
     @item = find_item(params)
   end

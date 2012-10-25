@@ -6,7 +6,7 @@ define ["controllers/base_controller"], (BaseController) ->
     }
 
     new: ->
-      console.log("items#new")
+      @log("guides#new")
 
     edit: ->
-      console.log("items#edit")
+      @log("guides#edit")

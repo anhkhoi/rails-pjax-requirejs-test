@@ -1,4 +1,4 @@
-define "controllers/base_controller", ->
+define "controllers/base_controller", ["lib/logger"], (Logger) ->
 
   class ControllerFilter
     constructor: (@method, @options) ->
@@ -15,6 +15,7 @@ define "controllers/base_controller", ->
       if @options.except && @options.except.indexOf(action) > 0
         return false
       return true
+      
   
   class BaseController
     @before_filters = []
@@ -22,6 +23,8 @@ define "controllers/base_controller", ->
     @before_filter = (method, options) ->
       filter = new ControllerFilter(method, options)
       @before_filters.push(filter)
+    
+    @logger = Logger.instance()
     
     constructor: (@view) ->
       # runs the controller-wide scripts
@@ -40,7 +43,10 @@ define "controllers/base_controller", ->
     
     unload: -> # no-op
     
+    log: (message) ->
+      @.constructor.logger.log(message)
+    
     validate_forms: ->
       require ["rails.validations"], =>
-        console.log("filter:validate_forms")
+        @log("filter:validate_forms")
         @view.find("form[data-validate]").validate()

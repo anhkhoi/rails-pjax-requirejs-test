@@ -6,25 +6,25 @@ define ["controllers/base_controller"], (BaseController) ->
     }
 
     index: ->
-      console.log("items#index")
+      @log("items#index")
 
     new: ->
-      console.log("items#new")
+      @log("items#new")
 
     edit: ->
-      console.log("items#edit")
+      @log("items#edit")
 
     show: ->
-      console.log("items#show")
+      @log("items#show")
       require ["lib/sse_stream"], (SSEStream) =>
         stream = new SSEStream(window.location.href + "/live")
-        stream.on "message", (e) ->
-          console.log(e.data)
+        stream.on "message", (e) =>
+          @log(e.data)
         @streams ||= []
         @streams.push(stream)
     
     unload: ->
-      console.log("unloading items")
+      @log("items:unload")
       @close_streams()
     
     close_streams: ->

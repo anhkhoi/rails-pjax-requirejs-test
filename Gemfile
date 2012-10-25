@@ -38,6 +38,9 @@ gem "client_side_validations"
 # Silence the asset pipeline
 gem "quiet_assets", group: :development
 
+# Security
+gem "strong_parameters"
+
 # Deployment
 group :development do
   gem "capistrano"
@@ -46,7 +49,7 @@ group :development do
 end
 gem "turbo-sprockets-rails3" # improves asset pipeline speed
 
-# testing
+# Testing
 group :development, :test do
   # Unit tests
   gem "rspec-rails"

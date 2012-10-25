@@ -60,7 +60,7 @@ class ItemsController < ApplicationController
   # POST /items
   # POST /items.json
   def create
-    @item = Item.new(params[:item])
+    @item = Item.new(item_params)
 
     respond_to do |format|
       if @item.save
@@ -81,7 +81,7 @@ class ItemsController < ApplicationController
     @item = load_item(params)
 
     respond_to do |format|
-      if @item.update_attributes(params[:item])
+      if @item.update_attributes(item_params)
         format.html { redirect_to @item, notice: "Item was successfully updated." }
         format.json { render json: @item }
         format.js { render :form }
@@ -107,6 +107,10 @@ class ItemsController < ApplicationController
   end
   
   protected
+  def item_params
+    params.require(:item).permit(:title, :description)
+  end
+
   def load_items(options = {})
     Item.all
   end
