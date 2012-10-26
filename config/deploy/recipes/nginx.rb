@@ -11,11 +11,9 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   # Configure the logrotate.d config file after install
   after "nginx:install", "nginx:configure_logrotate"
   
-  # loads the user's setting for which roles NGINX is to be installed on
-  def nginx_roles
-    [:web]
-  end
-  
+  _cset(:nginx_roles) { [:web] }
+  _cset(:nginx_service_name) { "nginx" }
+
   # returns the location of the NGINX pid file
   def nginx_pid_file
     capture("cat /etc/nginx/nginx.conf | grep pid | awk '{print $2}'").chomp.gsub(/\;$/, "")
@@ -23,17 +21,17 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
 
   namespace :nginx do
     desc "Installs NGINX"
-    task :install, roles: nginx_roles, on_no_matching_servers: :continue do
+    task :install, roles: fetch(:nginx_roles), on_no_matching_servers: :continue do
       sudo "apt-get install -y -qq nginx"
       puts " ** installed NGINX."
     end
     
     desc "Configures monit to watch NGINX"
-    task :configure_monit, roles: nginx_roles, on_no_matching_servers: :continue do
+    task :configure_monit, roles: fetch(:nginx_roles), on_no_matching_servers: :continue do
       # upload the config file
-      upload_monit_config("nginx", {
+      upload_monit_config(fetch(:nginx_service_name), {
         template: "nginx.erb",
-        process_name: "nginx",
+        process_name: fetch(:nginx_service_name),
         pid_file: nginx_pid_file,
         start_command: "/etc/init.d/nginx start",
         stop_command: "/etc/init.d/nginx stop",
@@ -46,11 +44,11 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     end
     
     desc "Configures logrotate to watch NGINX"
-    task :configure_logrotate, roles: nginx_roles, on_no_matching_servers: :continue do
+    task :configure_logrotate, roles: fetch(:nginx_roles), on_no_matching_servers: :continue do
       # upload the config file
-      upload_logrotate_config("nginx", {
+      upload_logrotate_config(fetch(:nginx_service_name), {
         path: "/var/log/nginx/*.log",
-        post_rotate: "monit reload nginx",
+        post_rotate: "monit reload #{fetch(:nginx_service_name)}",
         create: "0640 www-data adm"
       })
       # ensure the syntax is valid
@@ -58,20 +56,20 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     end
     
     desc "Start NGINX"
-    task :start, roles: nginx_roles, on_no_matching_servers: :continue do
-      config[:process] = "nginx"
+    task :start, roles: fetch(:nginx_roles), on_no_matching_servers: :continue do
+      config[:process] = fetch(:nginx_service_name)
       monit.start_service
     end
     
     desc "Stop NGINX"
-    task :stop, roles: nginx_roles, on_no_matching_servers: :continue do
-      config[:process] = "nginx"
+    task :stop, roles: fetch(:nginx_roles), on_no_matching_servers: :continue do
+      config[:process] = fetch(:nginx_service_name)
       monit.stop_service
     end
     
     desc "Restart NGINX"
-    task :restart, roles: nginx_roles, on_no_matching_servers: :continue do
-      config[:process] = "nginx"
+    task :restart, roles: fetch(:nginx_roles), on_no_matching_servers: :continue do
+      config[:process] = fetch(:nginx_service_name)
       monit.restart_service
     end
   end

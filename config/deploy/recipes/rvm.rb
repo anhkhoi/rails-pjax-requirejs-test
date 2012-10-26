@@ -27,8 +27,9 @@ Capistrano::Configuration.instance(:must_exist).load do
   namespace :rvm do
     desc "Installs RVM requirements"
     task :install_prerequisites, roles: rvm_roles, on_no_matching_servers: :continue do
-      packages = %w(build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison)
+      packages = %w(build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison nodejs)
       sudo "apt-get install -y #{packages.join(" ")}"
+      run %Q(echo "export rvm_trust_rvmrcs_flag=1" > ~/.rvmrc)
     end
     
     desc "Disables RVM usage in Capistrano tasks"

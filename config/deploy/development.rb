@@ -54,6 +54,35 @@ namespace :deploy do
   task :empty_builds_dir, except: { no_release: true } do
     run "rm -rf #{copy_remote_dir}/*"
   end
+  
+  task :migrate, on_no_matching_servers: :continue do
+    # no-op
+  end
+  
+  task :start, on_no_matching_servers: :continue do
+    puma.start
+    varnish.start
+    nginx.start
+    sidekiq.start
+    mongodb.start
+    memcached.start
+    elasticsearch.start
+  end
+
+  task :restart, on_no_matching_servers: :continue do
+    puma.restart
+    sidekiq.restart
+  end
+  
+  task :stop, on_no_matching_servers: :continue do
+    puma.stop
+    varnish.stop
+    nginx.stop
+    sidekiq.stop
+    mongodb.stop
+    memcached.stop
+    elasticsearch.stop
+  end
 end
 
 # Ensure we have our builds dir

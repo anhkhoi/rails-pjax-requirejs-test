@@ -18,6 +18,7 @@ require "rvm/capistrano"
 require File.join(File.dirname(__FILE__), "deploy/recipes/lib/ext.rb")
 
 # Bundler config
+set :bundle_cmd, "$rvm_path/bin/rvm rvmrc trust load && bundle"
 set :bundle_without, [ :darwin, :development, :test ]
 
 namespace :deploy do

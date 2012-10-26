@@ -1,7 +1,7 @@
 define "lib/notification", ->
   
   class NotificationView
-    constructor: (image, title, content)
+    constructor: (image, title, content) ->
       @view = @build_container()
       @set_body(image, title, content)
       

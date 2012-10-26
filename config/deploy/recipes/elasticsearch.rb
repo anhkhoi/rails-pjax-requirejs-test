@@ -18,6 +18,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   _cset(:elasticsearch_package) { "https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-#{fetch(:elasticsearch_version)}.deb" }
   _cset(:elasticsearch_roles) { [:web] }
   _cset(:elasticsearch_config_file) { "/etc/elasticsearch.conf" }
+  _cset(:elasticsearch_service_name) { "elasticsearch" }
 
   namespace :elasticsearch do
     desc "Handles pre-requisites of elasticsearch"
@@ -43,8 +44,8 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     desc "Configures Monit to watch elasticsearch"
     task :configure_monit, roles: fetch(:elasticsearch_roles), on_no_matching_servers: :continue do
       # upload the config file
-      upload_monit_config("elasticsearch", {
-        process_name: "elasticsearch",
+      upload_monit_config(fetch(:elasticsearch_service_name), {
+        process_name: fetch(:elasticsearch_service_name),
         pid_file: "/var/run/elasticsearch.pid",
         start_command: "/etc/init.d/elasticsearch start",
         stop_command: "/etc/init.d/elasticsearch stop"
@@ -56,29 +57,29 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     desc "Configures logrotate to watch elasticsearch"
     task :configure_logrotate, roles: fetch(:elasticsearch_roles), on_no_matching_servers: :continue do
       # upload the config file
-      upload_logrotate_config("elasticsearch", {
+      upload_logrotate_config(fetch(:elasticsearch_service_name), {
         path: "/var/log/elasticsearch/*",
-        post_rotate: "monit reload elasticsearch"
+        post_rotate: "monit reload #{fetch(:elasticsearch_service_name)}"
       })
       # ensure the syntax is valid
       logrotate.validate_syntax
     end
 
-    desc "Start elasticsearch"
+    desc "Start Elasticsearch"
     task :start, roles: fetch(:elasticsearch_roles), on_no_matching_servers: :continue do
-      config[:process] = "elasticsearch"
+      config[:process] = fetch(:elasticsearch_service_name)
       monit.start_service
     end
 
-    desc "Stop elasticsearch"
+    desc "Stop Elasticsearch"
     task :stop, roles: fetch(:elasticsearch_roles), on_no_matching_servers: :continue do
-      config[:process] = "elasticsearch"
+      config[:process] = fetch(:elasticsearch_service_name)
       monit.stop_service
     end
 
-    desc "Restart elasticsearch"
+    desc "Restart Elasticsearch"
     task :restart, roles: fetch(:elasticsearch_roles), on_no_matching_servers: :continue do
-      config[:process] = "elasticsearch"
+      config[:process] = fetch(:elasticsearch_service_name)
       monit.restart_service
     end
   end

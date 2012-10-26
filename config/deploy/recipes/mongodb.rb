@@ -17,6 +17,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
 
   _cset(:mongodb_roles) { [:db] }
   _cset(:mongodb_config_file) { "/etc/mongodb.conf" }
+  _cset(:mongodb_service_name) { "mongodb" }
 
   namespace :mongodb do
     desc "Handles pre-requisites of mongodb"
@@ -37,8 +38,8 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     desc "Configures Monit to watch mongodb"
     task :configure_monit, roles: fetch(:mongodb_roles), on_no_matching_servers: :continue do
       # upload the config file
-      upload_monit_config("mongodb", {
-        process_name: "mongodb",
+      upload_monit_config(fetch(:mongodb_service_name), {
+        process_name: fetch(:mongodb_service_name),
         pid_file: "/var/lib/mongodb/mongod.lock",
         start_command: "/etc/init.d/mongodb start",
         stop_command: "/etc/init.d/mongodb stop"
@@ -47,12 +48,12 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
       monit.validate_syntax
     end
 
-    desc "Configures logrotate to watch mongodb"
+    desc "Configures logrotate to watch MongoDB"
     task :configure_logrotate, roles: fetch(:mongodb_roles), on_no_matching_servers: :continue do
       # upload the config file
-      upload_logrotate_config("mongodb", {
+      upload_logrotate_config(fetch(:mongodb_service_name), {
         path: "/var/log/mongodb/*",
-        post_rotate: "monit reload mongodb"
+        post_rotate: "monit reload #{fetch(:mongodb_service_name)}"
       })
       # ensure the syntax is valid
       logrotate.validate_syntax
@@ -60,19 +61,19 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     
     desc "Start MongoDB"
     task :start, roles: fetch(:mongodb_roles), on_no_matching_servers: :continue do
-      config[:process] = "mongodb"
+      config[:process] = fetch(:mongodb_service_name)
       monit.start_service
     end
     
     desc "Stop MongoDB"
     task :stop, roles: fetch(:mongodb_roles), on_no_matching_servers: :continue do
-      config[:process] = "mongodb"
+      config[:process] = fetch(:mongodb_service_name)
       monit.stop_service
     end
     
     desc "Restart MongoDB"
     task :restart, roles: fetch(:mongodb_roles), on_no_matching_servers: :continue do
-      config[:process] = "mongodb"
+      config[:process] = fetch(:mongodb_service_name)
       monit.restart_service
     end
   end
