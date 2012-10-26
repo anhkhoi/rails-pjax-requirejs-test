@@ -29,7 +29,6 @@ end
 
 # Javascript frameworks
 gem "jquery-rails"
-gem "requirejs-rails", "~> 0.9.0"
 gem "turbolinks"
 
 # Validation
