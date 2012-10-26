@@ -19,7 +19,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
       upload_monit_config(fetch(:sidekiq_service_name), {
         process_name: fetch(:sidekiq_service_name),
         pid_file: fetch(:sidekiq_pid_file),
-        start_command: "#{fetch :sidekiq_shell} -c 'cd #{current_path} ; $rvm_path/bin/rvm rvmrc trust load ; nohup bundle exec sidekiq -e production -C #{fetch :sidekiq_config_file} -P #{fetch :sidekiq_pid_file} >> #{fetch :sidekiq_log_file} 2>&1 &'",
+        start_command: "#{fetch :sidekiq_shell} -c 'cd #{current_path} ; $rvm_path/bin/rvm rvmrc trust load ; nohup bundle exec sidekiq -e #{rails_env} -C #{fetch :sidekiq_config_file} -P #{fetch :sidekiq_pid_file} >> #{fetch :sidekiq_log_file} 2>&1 &'",
         stop_command: "#{fetch :sidekiq_shell} -c 'if [ -d #{current_path} ] && [ -f #{fetch :sidekiq_pid_file} ]; then cd #{current_path} ; bundle exec sidekiqctl stop #{fetch :sidekiq_pid_file}; fi'"
       })
       # note: can also use `su - myuser -c 'COMMAND'` to run via RVM shell 

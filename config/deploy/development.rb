@@ -2,6 +2,8 @@ set :deploy_via, :copy
 set :copy_remote_dir, "/u/apps/#{application}/builds"
 set :repository, "."
 set :user, "vagrant"
+set :domain, "trustindex.vm"
+set :rails_env, "production"
 
 # SSH details
 key_file = `vagrant ssh-config | grep IdentityFile | awk '{print $2}'`.chomp

@@ -1,3 +1,3 @@
 check process <%= process_name %> with pidfile <%= pid_file %>
-  start program = "<%= start_command %>" 
-  stop program = "<%= stop_command %>"
+  start program = "<%= start_command %>"<% if defined?(uid) && uid && defined?(gid) && gid %> as uid <%= uid %> and gid <%= gid %><% end %>
+  stop program = "<%= stop_command %>"<% if defined?(uid) && uid && defined?(gid) && gid %> as uid <%= uid %> and gid <%= gid %><% end %>

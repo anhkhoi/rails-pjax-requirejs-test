@@ -1,4 +1,4 @@
-upstream unicorn {
+upstream puma {
   server unix:<%= puma_sock_file %> fail_timeout=0;
 }
 
@@ -32,8 +32,8 @@ server {
   # Location of our static files
   root <%= current_path %>/public;
 
-  # Attempt to find the file, if not, serve via unicorn
-  try_files $uri/index.html $uri @unicorn;
+  # Attempt to find the file, if not, serve via puma
+  try_files $uri/index.html $uri @puma;
 
   location @puma {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
