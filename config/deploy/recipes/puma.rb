@@ -10,7 +10,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   _cset(:puma_pid_file) { File.join(shared_path, "pids/puma.pid") }
   _cset(:puma_state_file) { File.join(shared_path, "pids/puma.state") }
   _cset(:puma_log_file) { File.join(shared_path, "log/puma.log") }
-  _cset(:puma_shell) { capture("which rvm-shell").chomp }
+  _cset(:puma_shell) { "/bin/bash --login #{capture("which rvm-shell").chomp}" }
   _cset(:puma_service_name) { "puma" }
   _cset(:puma_sock_file) { File.join(shared_path, "pids/puma.sock") }
 
