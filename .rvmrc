@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+rvm_project_rvmrc=1
+
 if ! rvm list | grep -q ruby-1.9.3-p194 ; then
   rvm install 1.9.3-p194
 fi

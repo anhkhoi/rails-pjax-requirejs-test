@@ -1,5 +1,5 @@
 upstream puma {
-  server unix:<%= puma_sock_file %> fail_timeout=0;
+  server unix://<%= puma_sock_file %> fail_timeout=0;
 }
 
 <% if domain =~ /^www\./ %>
