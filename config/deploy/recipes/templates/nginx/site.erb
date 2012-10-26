@@ -1,0 +1,66 @@
+upstream unicorn {
+  server unix:<%= puma_sock_file %> fail_timeout=0;
+}
+
+<% if domain =~ /^www\./ %>
+server {
+  listen 80;
+  server_name <%= domain.gsub(/^www\./, "") %>;
+
+  location / {
+    # disgard anything but GET commands
+    if ($request_method != GET) {
+      return 405;
+    }
+    # redirect to the main site
+    rewrite ^/(.*)$  http://<%= domain %>/$1 permanent;
+  }
+}
+<% end %>
+
+server {
+  listen 80 default deferred;
+
+  server_name <%= domain %>;
+
+  # Handle uploads upto 4 gigabytes
+  client_max_body_size 4G;
+
+  # Timeout persistent connections after 10 seconds
+  keepalive_timeout 10;
+
+  # Location of our static files
+  root <%= current_path %>/public;
+
+  # Attempt to find the file, if not, serve via unicorn
+  try_files $uri/index.html $uri @unicorn;
+
+  location @puma {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+    proxy_pass http://puma;
+  }
+
+  error_page 401 /401.html;
+  error_page 404 /404.html;
+  error_page 405 /405.html;
+  error_page 422 /422.html;
+  error_page 500 /500.html;
+  error_page 502 /502.html;
+  error_page 503 /503.html;
+  error_page 504 /504.html;
+}
+
+server { 
+  listen 80;
+  server_name origin.<%= domain.gsub(/^www\./, "") %>;
+  keepalive_timeout 30;
+  root <%= current_path %>/public;
+  try_files $uri/index.html $uri;      
+
+  location / {
+    expires max;
+    add_header Cache-Control public;
+  }   
+}

@@ -1,5 +1,6 @@
 # Application options
 set :application, "pjax_requirejs_test"
+set :domain, "www.trustindex.com"
 
 # Source control
 set :scm, :git

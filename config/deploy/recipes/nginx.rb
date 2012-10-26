@@ -13,11 +13,10 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   
   _cset(:nginx_roles) { [:web] }
   _cset(:nginx_service_name) { "nginx" }
-
-  # returns the location of the NGINX pid file
-  def nginx_pid_file
-    capture("cat /etc/nginx/nginx.conf | grep pid | awk '{print $2}'").chomp.gsub(/\;$/, "")
-  end
+  _cset(:nginx_pid_file) { "/var/run/nginx.pid" }
+  _cset(:nginx_template_dir) { File.join(File.dirname(__FILE__), "templates/nginx") }
+  _cset(:nginx_config_file) { "/etc/nginx/nginx.conf" }
+  _cset(:nginx_site_file) { "/etc/nginx/sites-enabled/#{application}" }
 
   namespace :nginx do
     desc "Installs NGINX"
@@ -26,13 +25,39 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
       puts " ** installed NGINX."
     end
     
+    desc "Configures NGINX"
+    task :configure, roles: fetch(:nginx_roles), on_no_matching_servers: :continue do
+      upload_template({
+        template: File.join(fetch(:nginx_template_dir), "nginx.erb"),
+        destination: fetch(:nginx_config_file),
+        data: {
+          pidfile: fetch(:nginx_pid_file)
+        }
+      })
+      
+      upload_template({
+        template: File.join(fetch(:nginx_template_dir), "site.erb"),
+        destination: fetch(:nginx_site_file),
+        data: {
+          domain: domain,
+          current_path: current_path,
+          shared_path: shared_path,
+          puma_sock_file: fetch(:puma_sock_file),
+        }
+      })
+      
+      sudo "rm -f /etc/nginx/sites-enabled/default"
+      
+      puts " ** configured NGINX."
+    end
+    
     desc "Configures monit to watch NGINX"
     task :configure_monit, roles: fetch(:nginx_roles), on_no_matching_servers: :continue do
       # upload the config file
       upload_monit_config(fetch(:nginx_service_name), {
         template: "nginx.erb",
         process_name: fetch(:nginx_service_name),
-        pid_file: nginx_pid_file,
+        pid_file: fetch(:nginx_pid_file),
         start_command: "/etc/init.d/nginx start",
         stop_command: "/etc/init.d/nginx stop",
         max_children: 250,
@@ -72,5 +97,20 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
       config[:process] = fetch(:nginx_service_name)
       monit.restart_service
     end
+  end
+  
+  def upload_template(options)
+    # load the template contents
+    template_data = File.read(options[:template])
+    # define the temporary upload location
+    tempfile_path = "/tmp/nginx_#{File.basename(options[:destination])}"
+    # render the template with the options
+    data = ErbHashBinding.new(options[:data]).render(template_data)
+    # upload the config to the server
+    put(data, tempfile_path, mode: options[:mode] || 0600)
+    # delete any existing file
+    sudo "rm -f #{options[:destination]}"
+    # move it to the right place
+    sudo "mv #{tempfile_path} #{options[:destination]}"
   end
 end

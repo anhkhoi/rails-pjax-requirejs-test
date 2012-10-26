@@ -1,0 +1,9 @@
+user www-data;
+worker_processes 4;
+pid <%= pidfile %>;
+
+events {
+  worker_connections 1024;
+}
+
+include /etc/nginx/sites-enabled/*;

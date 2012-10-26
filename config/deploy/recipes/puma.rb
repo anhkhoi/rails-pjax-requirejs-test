@@ -12,6 +12,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   _cset(:puma_log_file) { File.join(shared_path, "log/puma.log") }
   _cset(:puma_shell) { capture("which rvm-shell").chomp }
   _cset(:puma_service_name) { "puma" }
+  _cset(:puma_sock_file) { File.join(shared_path, "pids/puma.sock") }
 
   namespace :puma do
     desc "Configures Monit to watch puma"
@@ -20,7 +21,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
       upload_monit_config(fetch(:puma_service_name), {
         process_name: fetch(:puma_service_name),
         pid_file: fetch(:puma_pid_file),
-        start_command: "#{fetch :puma_shell} -c 'cd #{current_path} ; $rvm_path/bin/rvm rvmrc trust load ; nohup bundle exec puma -e production -S #{fetch :puma_state_file} --port=#{fetch :puma_port} --pidfile=#{fetch :puma_pid_file} >> #{fetch :puma_log_file} 2>&1 &'",
+        start_command: "#{fetch :puma_shell} -c 'cd #{current_path} ; $rvm_path/bin/rvm rvmrc trust load ; nohup bundle exec puma -e production unix://#{fetch :puma_sock_file} -S #{fetch :puma_state_file} --port=#{fetch :puma_port} --pidfile=#{fetch :puma_pid_file} >> #{fetch :puma_log_file} 2>&1 &'",
         stop_command: "#{fetch :puma_shell} -c 'if [ -d #{current_path} ] && [ -f #{fetch :puma_pid_file} ]; then cd #{current_path} ; pumactl --state #{fetch :puma_state_file} stop ; fi ; rm -f #{fetch :puma_pid_file} #{fetch :puma_state_file}'",
         restart_command: "#{fetch :puma_shell} pumactl --state #{fetch :puma_state_file} restart"
       })
