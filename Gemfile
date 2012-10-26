@@ -62,11 +62,11 @@ group :development, :test do
   # JavaScript specs
   gem "jasminerice"
   gem "guard-jasmine"
-  
-  # improve Guard performance
-  if RUBY_PLATFORM =~ /darwin/i
-    gem "rb-fsevent", require: false
-  end
+end
+
+# Improve Guard performance
+group :test, :darwin do
+  gem "rb-fsevent", require: false
 end
 
 # useful testing utilities

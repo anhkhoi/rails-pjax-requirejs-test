@@ -17,13 +17,22 @@ require "bundler/capistrano"
 require "rvm/capistrano"
 require File.join(File.dirname(__FILE__), "deploy/recipes/lib/ext.rb")
 
+# Bundler config
+set :bundle_without, [ :darwin, :development, :test ]
+
 namespace :deploy do
   desc "Bootstraps a server with services"
   task :bootstrap do
     # no-op
   end
+  
+  desc "Ensure the deployment user owns the app dir"
+  task :own_app_dir, except: { no_release: true } do
+    sudo "chown #{user}:#{user} -R #{deploy_to}"
+  end
 end
 
+after "deploy:setup", "deploy:own_app_dir"
 after "deploy:setup", "deploy:bootstrap"
 
 Dir[File.join(File.dirname(__FILE__), "deploy", "recipes", "*.rb")].each { |f| require f }

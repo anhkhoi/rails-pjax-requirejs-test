@@ -51,7 +51,7 @@ GEM
     capybara-webkit (0.12.1)
       capybara (>= 1.0.0, < 1.2)
       json
-    celluloid (0.12.2)
+    celluloid (0.12.3)
       facter (>= 1.6.12)
       timers (>= 1.0.0)
     childprocess (0.3.6)
@@ -256,7 +256,7 @@ GEM
     treetop (1.4.11)
       polyglot
       polyglot (>= 0.3.1)
-    turbo-sprockets-rails3 (0.2.0)
+    turbo-sprockets-rails3 (0.2.3)
       railties (>= 3.1.0)
       sprockets (>= 2.0.0)
     turbolinks (0.5.1)

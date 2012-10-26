@@ -4,6 +4,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   before "deploy:bootstrap", "rvm:install_rvm"
   after "rvm:install_rvm", "rvm:install_ruby"
   after "rvm:install_rvm", "rvm:enable"
+  after "rvm:install_rvm", "rvm:install_bundler"
   after "deploy:bootstrap", "rvm:enable"
   after "deploy:setup", "rvm:enable"
   
@@ -43,6 +44,11 @@ Capistrano::Configuration.instance(:must_exist).load do
       if @rvm_shell
         set :shell, @rvm_shell
       end
+    end
+    
+    desc "Installs Bundler"
+    task :install_bundler, roles: rvm_roles, on_no_matching_servers: :continue do
+      run "gem install bundler --no-ri --no-rdoc"
     end
   end
 end

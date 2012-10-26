@@ -1,5 +1,7 @@
 set :deploy_via, :copy
+set :copy_remote_dir, "/u/apps/#{application}/builds"
 set :repository, "."
+set :user, "vagrant"
 
 # SSH details
 key_file = `vagrant ssh-config | grep IdentityFile | awk '{print $2}'`.chomp
@@ -37,3 +39,24 @@ end
 
 # Ensure we can connect to the Vagrant server first
 before "deploy:setup", "vagrant:verify_connection"
+
+namespace :deploy do
+  desc "Makes our builds directory"
+  task :mk_builds_dir, except: { no_release: true } do
+    test_file = File.join(copy_remote_dir, "test")
+    sudo "mkdir -p #{copy_remote_dir}"
+    sudo "chmod 0700 -R #{copy_remote_dir}"
+    sudo "chown #{user}:#{user} -R #{copy_remote_dir}"
+    run "touch #{test_file}; rm #{test_file}"
+  end
+  
+  desc "Deletes any remaining builds"
+  task :empty_builds_dir, except: { no_release: true } do
+    run "rm -rf #{copy_remote_dir}/*"
+  end
+end
+
+# Ensure we have our builds dir
+after "vagrant:verify_connection", "deploy:mk_builds_dir"
+# Ensure it's empty after deploy
+after "deploy", "deploy:empty_builds_dir"

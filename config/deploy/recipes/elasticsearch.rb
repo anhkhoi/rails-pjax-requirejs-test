@@ -23,7 +23,10 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     desc "Handles pre-requisites of elasticsearch"
     task :install_prerequisites, roles: fetch(:elasticsearch_roles) do
       sudo "apt-get install -y openjdk-7-jre"
-      if capture("ls -d -1 /usr/lib/jvm/*") =~ /^(.*\/java\-7\-openjdk\-(amd64|i386))$/
+      jvms = capture("ls -d -1 /usr/lib/jvm/*")
+      if jvms =~ /^.*\/java\-7\-openjdk$/
+        # no-op (already exists
+      elsif jvms =~ /^(.*\/java\-7\-openjdk\-(amd64|i386))$/
         sudo "ln -s #{$1} /usr/lib/jvm/java-7-openjdk"
       else
         abort "Unable to find JVM"
