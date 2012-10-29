@@ -1,0 +1,11 @@
+window.spec_files = [<%=
+  files = Dir["spec/javascripts/**/*_spec.*"]
+  # strip unwanted paths
+  files.map do |f|
+    f.gsub(/^spec\/javascripts\/(.*\_spec)\.js.*$/, '\1')
+  # wrap with quotes
+  end.map do |f|
+    %Q("#{f}")
+  # comma seperate
+  end.join(", ")
+%>]

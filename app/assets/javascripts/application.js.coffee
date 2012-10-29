@@ -4,6 +4,7 @@
 #= require jquery
 #= require rails
 #= require lib/logger
+#= require lib/controller_filter
 #= require controllers/base_controller
 #= require app
 

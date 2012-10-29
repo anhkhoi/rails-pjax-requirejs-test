@@ -1,4 +1,4 @@
-define "lib/notification", ->
+define "lib/notification", ["jquery"], ($) ->
   
   class NotificationView
     constructor: (image, title, content) ->

@@ -5,17 +5,7 @@ define ["controllers/base_controller"], (BaseController) ->
       only: ["new", "edit"]
     }
 
-    index: ->
-      @log("items#index")
-
-    new: ->
-      @log("items#new")
-
-    edit: ->
-      @log("items#edit")
-
     show: ->
-      @log("items#show")
       require ["lib/sse_stream"], (SSEStream) =>
         stream = new SSEStream(window.location.href + "/live")
         stream.on "message", (e) =>
@@ -24,7 +14,6 @@ define ["controllers/base_controller"], (BaseController) ->
         @streams.push(stream)
     
     unload: ->
-      @log("items:unload")
       @close_streams()
     
     close_streams: ->

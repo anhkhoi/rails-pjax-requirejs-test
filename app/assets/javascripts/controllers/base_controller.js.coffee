@@ -1,22 +1,5 @@
-define "controllers/base_controller", ["lib/logger"], (Logger) ->
+define "controllers/base_controller", ["jquery", "lib/logger", "lib/controller_filter"], ($, Logger, ControllerFilter) ->
 
-  class ControllerFilter
-    constructor: (@method, @options) ->
-    
-    run: (controller, action) ->
-      if @applicable(action)
-        controller[@method]()
-    
-    applicable: (action) ->
-      unless @options
-        return true
-      if @options.only && @options.only.indexOf(action) < 0
-        return false
-      if @options.except && @options.except.indexOf(action) > 0
-        return false
-      return true
-      
-  
   class BaseController
     @before_filters = []
 
@@ -33,20 +16,22 @@ define "controllers/base_controller", ["lib/logger"], (Logger) ->
       @perform_action(@view.data("action"))
 
     perform_action: (action) ->
+      @log("#{@.constructor.name}##{action}")
+      # run applicable filters
+      for filter in @.constructor.before_filters || []
+        filter.run(@, action)
       # if there is an action defined, and we have a method
       if action && @[action]
-        # run applicable filters
-        for filter in @.constructor.before_filters || []
-          filter.run(@, action)
         # run the method
         @[action]()
     
-    unload: -> # no-op
+    unload: ->
+      @log("BaseController#unload")
     
     log: (message) ->
       @.constructor.logger.log(message)
     
     validate_forms: ->
       require ["rails.validations"], =>
-        @log("filter:validate_forms")
+        @log("BaseController#validate_forms")
         @view.find("form[data-validate]").validate()

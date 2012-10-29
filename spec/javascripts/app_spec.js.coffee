@@ -1,4 +1,4 @@
-require ["app"], (App) ->
+define "app_spec", ["app"], (App) ->
 
   describe "App", ->
 

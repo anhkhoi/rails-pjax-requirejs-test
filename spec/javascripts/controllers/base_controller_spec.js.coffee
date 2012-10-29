@@ -1,4 +1,4 @@
-require ["controllers/base_controller"], (BaseController) ->
+define "controllers/base_controller_spec", ["controllers/base_controller"], (BaseController) ->
 
   describe "BaseController", ->
 
