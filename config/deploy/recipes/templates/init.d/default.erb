@@ -11,12 +11,12 @@
 
 PATH=<%= path %>
 DAEMON=<%= daemon %>
-DAEMON_ARGS=<%= daemon_args %>
+DAEMON_ARGS=<%= daemon_args if defined?(daemon_args) %>
 NAME=<%= name %>
 DESC=<%= name %>
 
-RUNDIR=/var/run/<%= name %>
-PIDFILE=$RUNDIR/<%= name %>.pid
+RUNDIR=<%= defined?(pidfile) && pidfile ? File.dirname(pidfile) : "/var/run/#{name}" %>
+PIDFILE=<%= defined?(pidfile) && pidfile ? pidfile : "$RUNDIR/#{name}.pid" %>
 
 test -x $DAEMON || exit 0
 
