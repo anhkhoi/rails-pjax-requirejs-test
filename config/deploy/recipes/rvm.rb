@@ -29,6 +29,14 @@ Capistrano::Configuration.instance(:must_exist).load do
       run %Q(echo "export rvm_trust_rvmrcs_flag=1" > ~/.rvmrc)
     end
     
+    desc "Installs the app's Ruby"
+    task :install_ruby do
+      # load the Ruby version and Gemset
+      ruby, gemset = ENV["GEM_HOME"].gsub(/.*\//,"").split("@")
+      # install the ruby
+      sudo "rvm install #{ruby}"
+    end
+    
     desc "Disables RVM usage in Capistrano tasks"
     task :disable, roles: lambda { fetch(:rvm_roles) }, on_no_matching_servers: :continue do
       unless rvm_installed
