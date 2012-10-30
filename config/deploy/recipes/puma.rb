@@ -41,10 +41,10 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     
     desc "Creates a wrapper to run Puma"
     task :create_wrapper, roles: lambda { fetch(:puma_roles) }, on_no_matching_servers: :continue do
-      wrapper_data = %Q(#!/bin/bash
+      wrapper_data = %Q(#!/bin/bash --login
        cd #{current_path}
-       rvm rvmrc trust load
-       bundle exec puma -e #{rails_env} -S #{fetch :puma_state_file} --port=#{fetch :puma_port} --pidfile=#{fetch :puma_pid_file} --bind=unix://#{fetch :puma_sock_file} >> #{fetch :puma_log_file} 2>&1
+       rvm rvmrc trust load > /dev/null
+       bundle exec puma -e #{rails_env} -S #{fetch :puma_state_file} --port=#{fetch :puma_port} --pidfile=#{fetch :puma_pid_file} --bind=unix://#{fetch :puma_sock_file} >> #{fetch :puma_log_file} 2>&1 &
       ).gsub(/^[\s\t]+/, "")
       # ensure we have a wrapper path
       run "mkdir -p #{File.dirname(fetch(:puma_wrapper_path))}"

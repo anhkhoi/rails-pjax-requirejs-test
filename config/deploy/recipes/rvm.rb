@@ -34,7 +34,11 @@ Capistrano::Configuration.instance(:must_exist).load do
       # load the Ruby version and Gemset
       ruby, gemset = ENV["GEM_HOME"].gsub(/.*\//,"").split("@")
       # install the ruby
-      sudo "rvm install #{ruby}"
+      run %Q(
+        rvm install #{ruby};
+        rvm use #{ruby};
+        rvm gemset create #{gemset}
+      ), shell: "/bin/bash --login"
     end
     
     desc "Disables RVM usage in Capistrano tasks"

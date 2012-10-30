@@ -5,6 +5,9 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   # Install NGINX when setting up the server
   after "deploy:bootstrap", "nginx:install"
   
+  # Configure the site config file after install
+  after "nginx:install", "nginx:configure"
+  
   # Configure the monit.d config file after install
   after "nginx:install", "nginx:configure_monit"
   

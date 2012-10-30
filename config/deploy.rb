@@ -10,6 +10,7 @@ set :stages, %w(development)
 set :default_stage, "development"
 
 # RVM config
+set :rvm_ruby_string, ENV["GEM_HOME"].gsub(/.*\//,"")
 set :rvm_type, :system
 
 require "capistrano_colors"
@@ -17,6 +18,9 @@ require "capistrano/ext/multistage"
 require "bundler/capistrano"
 require "rvm/capistrano"
 require File.join(File.dirname(__FILE__), "deploy/recipes/lib/ext.rb")
+
+# override RVM shell
+set :default_shell, "/bin/bash --login"
 
 # Bundler config
 set :bundle_cmd, "$rvm_path/bin/rvm rvmrc trust load && bundle"
