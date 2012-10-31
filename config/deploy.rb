@@ -36,6 +36,35 @@ namespace :deploy do
   task :own_app_dir, except: { no_release: true } do
     sudo "chown #{user}:#{user} -R #{deploy_to}"
   end
+  
+  task :migrate, on_no_matching_servers: :continue do
+    # no-op
+  end
+  
+  task :start, on_no_matching_servers: :continue do
+    puma.start
+    varnish.start
+    nginx.start
+    sidekiq.start
+    mongodb.start
+    memcached.start
+    elasticsearch.start
+  end
+  
+  task :restart, on_no_matching_servers: :continue do
+    puma.restart
+    sidekiq.restart
+  end
+  
+  task :stop, on_no_matching_servers: :continue do
+    puma.stop
+    varnish.stop
+    nginx.stop
+    sidekiq.stop
+    mongodb.stop
+    memcached.stop
+    elasticsearch.stop
+  end
 end
 
 after "deploy:setup", "deploy:own_app_dir"
