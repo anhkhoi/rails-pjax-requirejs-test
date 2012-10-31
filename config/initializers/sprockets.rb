@@ -19,7 +19,7 @@ class JavascriptIncludeProcessor < Sprockets::Processor
           i += 1
           # load the requirement path
           basic_path = attributes.logical_path.gsub(/#{attributes.format_extension}$/, "")
-          puts "Found basic path"
+          puts "Found basic path: #{basic_path}"
           # find the compiled asset
           asset = assets.find_asset("#{basic_path}#{attributes.format_extension}")
           puts "Found asset"
