@@ -6,7 +6,6 @@ class JavascriptIncludeProcessor < Sprockets::Processor
       javascripts = {}
       # read all the assets
       assets.each_file do |path|
-        "{}"
         #attributes = assets.attributes_for(path)
         ## if it's a javascript file
         #if attributes.content_type == "application/javascript"
@@ -21,6 +20,7 @@ class JavascriptIncludeProcessor < Sprockets::Processor
       end
       # output as a JSON hash
       #javascripts.to_json
+      "{}"
     end
   end
   
