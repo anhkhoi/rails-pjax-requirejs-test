@@ -10,12 +10,11 @@ class JavascriptIncludeProcessor < Sprockets::Processor
         if attributes.content_type == "application/javascript"
           # load the requirement path
           basic_path = attributes.logical_path.gsub(/#{attributes.format_extension}$/, "")
-          # calculate the digest
-          digest = assets.file_digest(path)
-          # translate that into a full path
-          asset_path = "#{basic_path}-#{digest}"
+          # calculate the full path
+          full_path = context.asset_path("#{basic_path}#{attributes.format_extension}")
+          full_path = full_path.gsub(/#{attributes.format_extension}$/, "")
           # merge into the hash
-          javascripts.merge!({ basic_path => asset_path })
+          javascripts.merge!({ basic_path => full_path })
         end
       end
       # output as a JSON hash
