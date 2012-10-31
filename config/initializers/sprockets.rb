@@ -19,10 +19,13 @@ class JavascriptIncludeProcessor < Sprockets::Processor
           i += 1
           # load the requirement path
           basic_path = attributes.logical_path.gsub(/#{attributes.format_extension}$/, "")
+          puts "Found basic path"
           # find the compiled asset
           asset = assets.find_asset("#{basic_path}#{attributes.format_extension}")
+          puts "Found asset"
           # calculate the full path
           full_path = asset.digest_path
+          puts "Found full path"
           # merge into the hash
           javascripts.merge!({ basic_path => full_path })
         end
