@@ -45,6 +45,9 @@ module PjaxRequirejsTest
     # Enable threaded mode
     config.threadsafe!
     
+    # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
+    config.assets.precompile += %w( controllers/*.js lib/*.js print.css mobile.css mobile.js rails.validations.js )
+    
     config.generators do |g|
       g.orm :mongoid
       g.stylesheets false
