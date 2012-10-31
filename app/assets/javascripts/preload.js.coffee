@@ -1,7 +1,7 @@
 # loaded as part of the main bundle of javascript
 
 window.require = {
-  baseUrl: "/assets"
+  paths: $javascript_paths
 }
 
 window.ClientSideValidations ||= {}

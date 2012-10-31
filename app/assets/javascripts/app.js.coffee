@@ -1,12 +1,6 @@
 define "app", ["jquery"], ($) ->
 
 	class App
-		@controllers = [<%=
-				dir = File.join(File.dirname(__FILE__), "controllers", "**", "*.coffee")
-				paths = Dir[dir].map { |d| %Q("#{d.gsub(/^.*controllers\/([^\.]*).*?$/, 'controllers/\1')}") }
-				paths.join(", ")
-		%>]
-
 		constructor: (@view) ->
 			@controllers = new Array()
 
@@ -32,7 +26,7 @@ define "app", ["jquery"], ($) ->
 				# calculate our controller key
 				key = "controllers/#{view.data("controller")}_controller"
 				# if we have a file for this controller
-				if App.controllers.indexOf(key) >= 0
+				if requirejs.s.contexts._.config.paths[key]
 					# load the controller specific module
 					require [key], (Controller) =>
 						# initialize the controller with the view
