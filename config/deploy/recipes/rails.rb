@@ -7,7 +7,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   after "bundle:install", "rails:precompile_assets"
 
   namespace :rails do
-    task :configure_logrotate, on_no_matching_servers: :continue do
+    task :configure_logrotate, except: { no_release: true }, on_no_matching_servers: :continue do
       # upload the config file
       upload_logrotate_config("rails_app", {
         path: File.join(shared_path, "log/*.log")
@@ -17,8 +17,8 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     end
     
     desc "Compile static assets"
-    task :precompile_assets, roles: [:app, :bg], on_no_matching_servers: :continue do
-      run "cd #{release_path}; RAILS_ENV=production bundle exec rake assets:precompile"
+    task :precompile_assets, except: { no_release: true }, on_no_matching_servers: :continue do
+      run "cd #{release_path}; RAILS_ENV=production bundle exec rake assets:precompile --trace"
     end
   end
 end
