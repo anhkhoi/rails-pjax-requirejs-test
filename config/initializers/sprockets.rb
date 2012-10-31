@@ -5,26 +5,30 @@ class JavascriptIncludeProcessor < Sprockets::Processor
       puts "$javascript_paths found in #{context.pathname}"
       javascripts = {}
       i = 0
+      paths = []
       # read all the assets
       assets.each_file do |path|
+        paths << path
+      end
+      puts "Completed compiling asset list"
+      # loop through each path
+      paths.each do |path|
         attributes = assets.attributes_for(path)
         # if it's a javascript file
         if attributes.content_type == "application/javascript"
           i += 1
           # load the requirement path
           basic_path = attributes.logical_path.gsub(/#{attributes.format_extension}$/, "")
-        #  # calculate the full path
-        #  full_path = context.asset_path("#{basic_path}#{attributes.format_extension}")
-        #  full_path = full_path.gsub(/#{attributes.format_extension}$/, "")
-        #  # merge into the hash
-        #  javascripts.merge!({ basic_path => full_path })
-          javascripts.merge!({ basic_path => basic_path })
+          # calculate the full path
+          full_path = context.asset_path("#{basic_path}#{attributes.format_extension}")
+          full_path = full_path.gsub(/#{attributes.format_extension}$/, "")
+          # merge into the hash
+          javascripts.merge!({ basic_path => full_path })
         end
       end
       puts "#{i} JS files found"
       # output as a JSON hash
-      #javascripts.to_json
-      "{}"
+      javascripts.to_json
     end
   end
   
