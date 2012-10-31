@@ -27,4 +27,4 @@ class JavascriptIncludeProcessor < Sprockets::Processor
   end
 end
 
-Rails.application.assets.register_preprocessor("application/javascript", JavascriptIncludeProcessor)
+Rails.application.assets.register_bundle_processor("application/javascript", JavascriptIncludeProcessor)
