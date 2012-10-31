@@ -7,10 +7,14 @@ class JavascriptIncludeProcessor < Sprockets::Processor
       i = 0
       paths = []
       # read all the assets
-      assets.each_file do |path|
-        paths << path
+      assets.each_file do |pathname|
+        if pathname == context.pathname
+          puts "Ignoring #{pathname}"
+        else
+          paths << pathname
+        end
       end
-      puts "Completed compiling asset list"
+      puts "Completed compiling asset list, #{paths.size} files"
       # loop through each path
       paths.each do |path|
         attributes = assets.attributes_for(path)
