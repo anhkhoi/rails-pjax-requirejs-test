@@ -11,13 +11,14 @@ class JavascriptIncludeProcessor < Sprockets::Processor
         # if it's a javascript file
         if attributes.content_type == "application/javascript"
           i += 1
-        #  # load the requirement path
-        #  basic_path = attributes.logical_path.gsub(/#{attributes.format_extension}$/, "")
+          # load the requirement path
+          basic_path = attributes.logical_path.gsub(/#{attributes.format_extension}$/, "")
         #  # calculate the full path
         #  full_path = context.asset_path("#{basic_path}#{attributes.format_extension}")
         #  full_path = full_path.gsub(/#{attributes.format_extension}$/, "")
         #  # merge into the hash
         #  javascripts.merge!({ basic_path => full_path })
+          javascripts.merge!({ basic_path => basic_path })
         end
       end
       puts "#{i} JS files found"
