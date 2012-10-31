@@ -6,8 +6,8 @@ class JavascriptIncludeProcessor < Sprockets::Processor
       javascripts = {}
       # read all the assets
       assets.each_file do |path|
-        #attributes = assets.attributes_for(path)
-        ## if it's a javascript file
+        attributes = assets.attributes_for(path)
+        # if it's a javascript file
         #if attributes.content_type == "application/javascript"
         #  # load the requirement path
         #  basic_path = attributes.logical_path.gsub(/#{attributes.format_extension}$/, "")
