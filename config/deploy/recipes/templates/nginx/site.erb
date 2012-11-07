@@ -2,10 +2,10 @@ upstream puma {
   server unix://<%= puma_sock_file %> fail_timeout=0;
 }
 
-<% if domain =~ /^www\./ %>
+<% if domain =~ /^www\./ || (defined?(ssl) && ssl[:certificate]) %>
 server {
   listen 80;
-  server_name <%= domain.gsub(/^www\./, "") %>;
+  server_name <%= [domain, domain.gsub(/^www\./, "")].uniq.join(" ") %>;
 
   location / {
     # disgard anything but GET commands
@@ -13,15 +13,26 @@ server {
       return 405;
     }
     # redirect to the main site
-    rewrite ^/(.*)$  http://<%= domain %>/$1 permanent;
+    rewrite ^/(.*)$  http<%= "s" if defined?(ssl) && ssl[:certificate] %>://<%= domain %>/$1 permanent;
   }
+  
+  error_page 405 <%= current_path %>/405.html;
 }
 <% end %>
 
 server {
-  listen 80 default deferred;
+  listen <%= defined?(ssl) && ssl[:certificate] ? "443 ssl" : "80" %> default deferred;
 
+  # Set the domain
   server_name <%= domain %>;
+
+  <% if defined?(ssl) && ssl[:certificate] %># Configure SSL
+  ssl on;
+  ssl_certificate <%= ssl.fetch(:certificate) %>;
+  ssl_certificate_key <%= ssl.fetch(:certificate_key) %>;
+  ssl_protocols SSLv2 SSLv3 TLSv1;
+  ssl_ciphers RC4:HIGH:!aNULL:!MD5;
+  ssl_prefer_server_ciphers on;<% end %>
 
   # Handle uploads upto 4 gigabytes
   client_max_body_size 4G;
@@ -37,7 +48,7 @@ server {
 
   location @puma {
     # if the maintenance page exists, throw a 503 error
-    if (-f <%= shared_path %>/system/maintenance.html) { 
+    if (-f <%= shared_path %>/system/maintenance.html) {
       return 503;
       break;
     }
@@ -70,15 +81,25 @@ server {
   error_page 504 /504.html;
 }
 
-server { 
+server {
   listen 80;
+  
+  # Set the domain
   server_name origin.<%= domain.gsub(/^www\./, "") %>;
-  keepalive_timeout 30;
+  
+  # Timeout persistent connections after 10 seconds
+  keepalive_timeout 10;
+  
+  # Location of our static files
   root <%= current_path %>/public;
-  try_files $uri/index.html $uri;      
+  
+  # Attempt to find the file
+  try_files $uri/index.html $uri;
 
   location / {
+    # all these files expire in the future
     expires max;
+    # they are publicly (proxy) cachable
     add_header Cache-Control public;
-  }   
+  }
 }
