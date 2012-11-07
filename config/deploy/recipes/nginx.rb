@@ -20,6 +20,9 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
   _cset(:nginx_template_dir) { File.join(File.dirname(__FILE__), "templates/nginx") }
   _cset(:nginx_config_file) { "/etc/nginx/nginx.conf" }
   _cset(:nginx_site_file) { "/etc/nginx/sites-enabled/#{application}" }
+  _cset(:nginx_ssl_certs_dir) { File.join(File.dirname(__FILE__), "../../certs") }
+  _cset(:nginx_ssl_cert_file) { File.join(fetch(:nginx_ssl_certs_dir), "#{domain}.crt") }
+  _cset(:nginx_ssl_cert_key_file) { File.join(fetch(:nginx_ssl_certs_dir), "#{domain}.key") }
 
   namespace :nginx do
     desc "Installs NGINX"
@@ -46,6 +49,10 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
           current_path: current_path,
           shared_path: shared_path,
           puma_sock_file: fetch(:puma_sock_file),
+          ssl: {
+            certificate: File.exist?(fetch(:nginx_ssl_cert_file)) && fetch(:nginx_ssl_cert_file),
+            certificate_key: File.exist?(fetch(:nginx_ssl_cert_key_file)) && fetch(:nginx_ssl_cert_key_file),
+          }
         }
       })
       

@@ -30,8 +30,8 @@ server {
   ssl on;
   ssl_certificate <%= ssl.fetch(:certificate) %>;
   ssl_certificate_key <%= ssl.fetch(:certificate_key) %>;
-  ssl_protocols SSLv2 SSLv3 TLSv1;
-  ssl_ciphers RC4:HIGH:!aNULL:!MD5;
+  ssl_protocols <%= ssl[:protocols] || "SSLv2 SSLv3 TLSv1" %>;
+  ssl_ciphers <%= ssl[:ciphers] || "RC4:HIGH:!aNULL:!MD5" %>;
   ssl_prefer_server_ciphers on;<% end %>
 
   # Handle uploads upto 4 gigabytes
