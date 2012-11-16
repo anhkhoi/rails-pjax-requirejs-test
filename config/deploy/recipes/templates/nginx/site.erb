@@ -8,8 +8,8 @@ server {
   server_name <%= [domain, domain.gsub(/^www\./, "")].uniq.join(" ") %>;
 
   location / {
-    # disgard anything but GET commands
-    if ($request_method != GET) {
+    # disgard anything but GET and HEAD requests
+    if ($request_method !~ ^(GET|HEAD)$) {
       return 405;
     }
     # redirect to the main site
