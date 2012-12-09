@@ -31,8 +31,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
         process_name: fetch(:puma_service_name),
         pid_file: fetch(:puma_pid_file),
         start_command: "/etc/init.d/#{fetch(:puma_service_name)} start",
-        stop_command: "/etc/init.d/#{fetch(:puma_service_name)} stop",
-        restart_command: "/etc/init.d/#{fetch(:puma_service_name)} restart"
+        stop_command: "/etc/init.d/#{fetch(:puma_service_name)} stop"
       })
       # note: can also use `su - myuser -c 'COMMAND'` to run via RVM shell
       # ensure the syntax is valid
@@ -42,10 +41,27 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     desc "Creates a wrapper to run Puma"
     task :create_wrapper, roles: lambda { fetch(:puma_roles) }, on_no_matching_servers: :continue do
       wrapper_data = %Q(#!/bin/bash --login
-       cd #{current_path}
-       rvm rvmrc trust load > /dev/null
-       rm -f #{fetch :puma_pid_file} #{fetch :puma_sock_file} #{fetch :puma_state_file}
-       bundle exec puma -e #{rails_env} -S #{fetch :puma_state_file} --port=#{fetch :puma_port} --pidfile=#{fetch :puma_pid_file} --bind=unix://#{fetch :puma_sock_file} >> #{fetch :puma_log_file} 2>&1 &
+      
+        pidfile=#{fetch :puma_pid_file}
+        sockfile=#{fetch :puma_sock_file}
+        statefile=#{fetch :puma_state_file}
+      
+        # if the pid is active
+        pid=`cat $pidfile`
+        if kill -s 0 $pid 2> /dev/null; then
+          # we can't start
+          echo "Puma is already running"
+          exit 1
+        fi
+
+        # if Puma isn't running, change into the app
+        cd #{current_path}
+        # boot RVM
+        rvm rvmrc trust load > /dev/null
+        # remove old files
+        rm -f $pidfile $sockfile $statefile
+        # run Puma
+        bundle exec puma -e #{rails_env} -S $statefile --port=#{fetch :puma_port} --pidfile=$pidfile --bind=unix://$sockfile >> #{fetch :puma_log_file} 2>&1 &
       ).gsub(/^[\s\t]+/, "")
       # ensure we have a wrapper path
       run "mkdir -p #{File.dirname(fetch(:puma_wrapper_path))}"
@@ -68,8 +84,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     
     desc "Restart Puma"
     task :restart, roles: lambda { fetch(:puma_roles) }, on_no_matching_servers: :continue do
-      config[:process] = fetch(:puma_service_name)
-      monit.restart_service
+      sudo "/etc/init.d/#{fetch(:puma_service_name)} restart"
     end
   end
 end

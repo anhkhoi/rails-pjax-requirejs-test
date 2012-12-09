@@ -30,16 +30,16 @@ case "$1" in
   chmod 755 $RUNDIR
   if start-stop-daemon --start --quiet --umask 007 --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_ARGS
   then
-    echo "$NAME."
+    echo "success"
   else
     echo "failed"
   fi
   ;;
   stop)
   echo -n "Stopping $DESC: "
-  if start-stop-daemon --stop --retry forever/QUIT/1 --quiet --oknodo --pidfile $PIDFILE --exec $DAEMON
+  if start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE
   then
-    echo "$NAME."
+    echo "success"
   else
     echo "failed"
   fi
