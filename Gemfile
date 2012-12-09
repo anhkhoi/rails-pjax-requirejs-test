@@ -40,6 +40,12 @@ gem "quiet_assets", group: :development
 # Security
 gem "strong_parameters"
 
+# Improved error pages
+group :development do
+  gem "better_errors"
+  gem "binding_of_caller"
+end
+
 # Deployment
 group :development do
   gem "capistrano"
