@@ -18,7 +18,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
     
     desc "Compile static assets"
     task :precompile_assets, except: { no_release: true }, on_no_matching_servers: :continue do
-      run "cd #{release_path}; RAILS_ENV=production bundle exec rake assets:precompile --trace"
+      run "cd #{release_path}; RAILS_ENV=production bundle exec rake assets:precompile"
     end
   end
 end
