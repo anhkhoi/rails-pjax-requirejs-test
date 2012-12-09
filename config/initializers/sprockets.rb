@@ -28,7 +28,7 @@ class JavascriptIncludeProcessor < Sprockets::Processor
   
   def asset_dictionary
     asset_list.inject({}) do |result, asset|
-      result.merge({ asset.logical_path.gsub(/\.js$/, "") => asset.digest_path })
+      result.merge({ asset.logical_path.gsub(/\.js$/, "") => asset.digest_path.gsub(/\.js$/, "") })
     end
   end
   
