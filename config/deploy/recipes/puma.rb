@@ -34,7 +34,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
         stop_command: "/etc/init.d/#{fetch(:puma_service_name)} stop",
         restart_command: "/etc/init.d/#{fetch(:puma_service_name)} restart"
       })
-      # note: can also use `su - myuser -c 'COMMAND'` to run via RVM shell 
+      # note: can also use `su - myuser -c 'COMMAND'` to run via RVM shell
       # ensure the syntax is valid
       monit.validate_syntax
     end
@@ -44,6 +44,7 @@ Capistrano::Configuration.instance(:must_exist).load do |config|
       wrapper_data = %Q(#!/bin/bash --login
        cd #{current_path}
        rvm rvmrc trust load > /dev/null
+       rm -f #{fetch :puma_pid_file} #{fetch :puma_sock_file} #{fetch :puma_state_file}
        bundle exec puma -e #{rails_env} -S #{fetch :puma_state_file} --port=#{fetch :puma_port} --pidfile=#{fetch :puma_pid_file} --bind=unix://#{fetch :puma_sock_file} >> #{fetch :puma_log_file} 2>&1 &
       ).gsub(/^[\s\t]+/, "")
       # ensure we have a wrapper path
