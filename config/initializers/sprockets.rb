@@ -5,6 +5,23 @@ class JavascriptIncludeProcessor < Sprockets::Processor
     end
   end
   
+  def asset_list
+    @files ||= begin
+      environment.paths.inject([]) do |files, directory|
+        Dir[File.join(directory, "**", "*")].each do |file|
+          # ensure a JS file
+          next unless file =~ /\.js$|\.js\./
+          # build the asset
+          logical_path = file.gsub(/^#{directory}\/?/, "").gsub(/\.js\..*?$/, ".js")
+          # add the asset to the array of files
+          files << Sprockets::Asset.new(environment, logical_path, file)
+        end
+        # return the result
+        files
+      end
+    end
+  end
+  
   def environment
     Rails.application.assets
   end
@@ -15,10 +32,8 @@ class JavascriptIncludeProcessor < Sprockets::Processor
     end
   end
   
-  def asset_list
-    environment.index.instance_variable_get(:@assets).values.select do |asset|
-      asset.digest_path =~ /\.js$/
-    end
+  def asset_index
+    environment.index
   end
 end
 
