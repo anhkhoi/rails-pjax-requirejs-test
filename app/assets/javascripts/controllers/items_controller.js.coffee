@@ -1,4 +1,4 @@
-define ["controllers/base_controller"], (BaseController) ->
+define "controllers/items_controller", ["controllers/base_controller"], (BaseController) ->
   
   class ItemsController extends BaseController
     @before_filter "validate_forms", {

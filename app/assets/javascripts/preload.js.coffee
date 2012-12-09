@@ -1,7 +1,7 @@
 # loaded as part of the main bundle of javascript
 
 window.require = {
-  paths: $javascript_paths
+  paths: ($javascript_paths || {})
 }
 
 window.ClientSideValidations ||= {}
